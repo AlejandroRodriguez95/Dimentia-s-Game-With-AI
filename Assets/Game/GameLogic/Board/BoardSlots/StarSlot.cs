@@ -11,8 +11,8 @@ public class StarSlot : BoardSlot
         playerCanStepOver = true;
         objectsCanBePutOver = true;
     }
-    public override void PrintType()
+    public override string PrintType()
     {
-        Debug.Log("S");
+        return "S";
     }
 }

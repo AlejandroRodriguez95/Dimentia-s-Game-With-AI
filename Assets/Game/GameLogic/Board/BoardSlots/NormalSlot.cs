@@ -11,8 +11,8 @@ public class NormalSlot : BoardSlot
         playerCanStepOver = true;
         objectsCanBePutOver = true;
     }
-    public override void PrintType()
+    public override string PrintType()
     {
-        Debug.Log("N");
+        return "N";
     }
 }

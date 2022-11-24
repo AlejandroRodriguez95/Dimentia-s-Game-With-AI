@@ -12,8 +12,8 @@ public class TeleportSlot : BoardSlot
         objectsCanBePutOver = false;
     }
 
-    public override void PrintType()
+    public override string PrintType()
     {
-        Debug.Log("T");
+        return "T";
     }
 }

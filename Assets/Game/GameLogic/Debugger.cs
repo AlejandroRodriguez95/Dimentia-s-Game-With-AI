@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class Debugger : MonoBehaviour
 {
-    // Start is called before the first frame update
+    Board board;
     void Start()
     {
+        board = new Board();
+        board.PrintBoard();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
     }
 }

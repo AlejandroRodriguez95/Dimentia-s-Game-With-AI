@@ -8,7 +8,8 @@ public class BoardSlot
     protected bool playerCanStepOver;
     protected bool objectsCanBePutOver;
 
-    public virtual void PrintType()
+    public virtual string PrintType()
     {
+        return "None";
     }
 }
