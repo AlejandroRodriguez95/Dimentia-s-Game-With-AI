@@ -5,7 +5,7 @@ using UnityEngine;
 public class TeleportSlot : BoardSlot
 {
     // Constructor
-    public TeleportSlot()
+    public TeleportSlot() : base()
     {
         maximumAmountOfPiecesInSlot = 1;
         playerCanStepOver = true;

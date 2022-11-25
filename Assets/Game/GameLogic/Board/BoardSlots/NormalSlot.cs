@@ -5,7 +5,7 @@ using UnityEngine;
 public class NormalSlot : BoardSlot
 {
     // Constructor
-    public NormalSlot()
+    public NormalSlot() : base()
     {
         maximumAmountOfPiecesInSlot = 4;
         playerCanStepOver = true;

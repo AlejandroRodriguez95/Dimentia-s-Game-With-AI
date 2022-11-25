@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Board
 {
-    private BoardSlot[,] board;
+    BoardSlot[,] board;
 
     public BoardSlot GetBoardSlotType((int,int) pos)
     {
@@ -15,6 +15,11 @@ public class Board
     public Piece[] GetBoardSlotPieces((int, int) pos)
     {
         return board[pos.Item1, pos.Item2].GetPieces();
+    }
+
+    public BoardSlot[,] GetBoard()
+    {
+        return board;
     }
 
     /// <Summary>
@@ -64,8 +69,18 @@ public class Board
     }
 
 
+    public void AddPieceToSlot((int,int) slot, Piece pieceToAdd)
+    {
+        board[slot.Item1, slot.Item2].AddPiece(pieceToAdd);
+    }
+
+    public void RemoveTopPieceFromSlot((int,int) slot)
+    {
+        board[slot.Item1, slot.Item2].RemovePiece();
+    }
 
 
+    #region Debugging
     public void PrintBoard()
     {
         for(int i = board.GetLength(1) - 1; i >= 0; i--)
@@ -73,4 +88,16 @@ public class Board
             Debug.Log($"  X[0]Y[{i}]: {board[0, i].PrintType()}   |   X[1]Y[{i}]: {board[1, i].PrintType()}   |   X[2]Y[{i}]: {board[2, i].PrintType()}   |   X[3]Y[{i}]: {board[3, i].PrintType()}");
         }
     }
+
+    public void PrintAllPieces()
+    {
+        foreach(BoardSlot slot in board)
+        {
+            slot.PrintPiecesInSlot();
+        }
+    }
+
+
+    #endregion
+
 }

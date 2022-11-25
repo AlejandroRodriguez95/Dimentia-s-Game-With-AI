@@ -5,7 +5,7 @@ using UnityEngine;
 public class StarSlot : BoardSlot
 {
     // Constructor
-    public StarSlot()
+    public StarSlot() : base()
     {
         maximumAmountOfPiecesInSlot = 4;
         playerCanStepOver = true;

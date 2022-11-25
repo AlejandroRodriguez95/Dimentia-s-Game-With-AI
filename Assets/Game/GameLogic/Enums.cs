@@ -5,3 +5,9 @@ public enum E_BoardSlotType
     Teleport,
     Start
 }
+
+public enum E_PlayerType
+{
+    Player,
+    AI
+}
