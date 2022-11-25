@@ -8,6 +8,13 @@ public class BoardSlot
     protected bool playerCanStepOver;
     protected bool objectsCanBePutOver;
 
+    protected Piece[] list;
+
+    public Piece[] GetPieces()
+    {
+        return list;
+    }
+
     public virtual string PrintType()
     {
         return "None";

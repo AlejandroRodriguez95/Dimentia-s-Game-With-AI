@@ -10,6 +10,7 @@ public class StarSlot : BoardSlot
         maximumAmountOfPiecesInSlot = 4;
         playerCanStepOver = true;
         objectsCanBePutOver = true;
+        list = new Piece[maximumAmountOfPiecesInSlot];
     }
     public override string PrintType()
     {

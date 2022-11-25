@@ -10,6 +10,7 @@ public class TeleportSlot : BoardSlot
         maximumAmountOfPiecesInSlot = 1;
         playerCanStepOver = true;
         objectsCanBePutOver = false;
+        list = new Piece[maximumAmountOfPiecesInSlot];
     }
 
     public override string PrintType()

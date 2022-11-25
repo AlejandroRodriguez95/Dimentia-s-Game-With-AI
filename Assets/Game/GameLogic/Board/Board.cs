@@ -5,8 +5,17 @@ using UnityEngine;
 
 public class Board
 {
-    BoardSlot[,] board;
+    private BoardSlot[,] board;
 
+    public BoardSlot GetBoardSlotType((int,int) pos)
+    {
+        return board[pos.Item1, pos.Item2];
+    }
+
+    public Piece[] GetBoardSlotPieces((int, int) pos)
+    {
+        return board[pos.Item1, pos.Item2].GetPieces();
+    }
 
     /// <Summary>
     /// Fills the board with slots of type BoardSlot
@@ -53,6 +62,9 @@ public class Board
         board[3, 4] = new NormalSlot();
         board[3, 5] = new StarSlot();
     }
+
+
+
 
     public void PrintBoard()
     {
