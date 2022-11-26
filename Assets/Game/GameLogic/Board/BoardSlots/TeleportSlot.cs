@@ -4,14 +4,22 @@ using UnityEngine;
 
 public class TeleportSlot : BoardSlot
 {
-    // Constructor
     public TeleportSlot() : base()
     {
         maximumAmountOfPiecesInSlot = 1;
-        playerCanStepOver = true;
-        objectsCanBePutOver = false;
         list = new Piece[maximumAmountOfPiecesInSlot];
+        boardSlotType = E_BoardSlotType.Teleport;
     }
+
+    public override bool CheckPieceFitsSlot(Piece piece)
+    {
+        if (piece.PieceType == E_PieceType.PlayerPiece)
+            return true;
+
+        return false;
+    }
+
+
 
     public override string PrintType()
     {

@@ -4,5 +4,8 @@ using UnityEngine;
 
 public class Pillow : Piece
 {
-
+    public Pillow() : base()
+    {
+        pieceType = E_PieceType.Pillow;
+    }
 }

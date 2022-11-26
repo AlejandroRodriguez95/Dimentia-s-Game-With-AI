@@ -69,15 +69,24 @@ public class Board
     }
 
 
-    public void AddPieceToSlot((int,int) slot, Piece pieceToAdd)
+    public bool AddPieceToSlot((int,int) slot, Piece pieceToAdd)
     {
-        board[slot.Item1, slot.Item2].AddPiece(pieceToAdd);
+        return board[slot.Item1, slot.Item2].AddPiece(pieceToAdd);
     }
 
-    public void RemoveTopPieceFromSlot((int,int) slot)
+    public bool RemoveTopPieceFromSlot((int,int) slot)
     {
-        board[slot.Item1, slot.Item2].RemovePiece();
+        return board[slot.Item1, slot.Item2].RemovePiece();
     }
+
+    public bool MovePlayer(Player player, (int,int) to)
+    {
+        player.PlayerPosOnBoard = to;
+        // Check then move
+
+        return true;
+    }
+
 
 
     #region Debugging
