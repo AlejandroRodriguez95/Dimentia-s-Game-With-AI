@@ -6,6 +6,10 @@ using UnityEngine;
 public class Board
 {
     BoardSlot[,] board;
+    
+    
+    Piece selectedPiece;
+    List<(int, int)> validMoves; // for selected piece
 
     public BoardSlot GetBoardSlotType((int,int) pos)
     {
@@ -81,11 +85,51 @@ public class Board
 
     public bool MovePlayer(Player player, (int,int) to)
     {
+
         player.PlayerPosOnBoard = to;
         // Check then move
 
         return true;
     }
+
+    public bool MovePiece((int, int) to)
+    {
+        
+
+        return true;
+    }
+
+    public bool SelectPiece((int,int) slot)
+    {
+        selectedPiece = (board[slot.Item1, slot.Item2].GetTopPiece());
+        if (selectedPiece != null)
+        {
+            return true;
+        }
+
+
+        else
+            return false;
+    }
+
+    private List<(int, int)> ScanLegalMoves(int radius, (int, int) slot)
+    {
+        List<(int, int)> tempList = new List<(int,int)>();
+
+        for(int i=slot.Item1-radius; i < radius; i++)
+        {
+            for(int j=slot.Item2-radius; j < radius; j++)
+            {
+                if (i < 0 || j < 0)
+                    continue;
+
+                if (board[slot.Item1, slot.Item2].CheckPieceFitsSlot(selectedPiece))
+                    tempList.Add(slot);
+            }
+        }
+        return tempList;
+    }
+
 
 
 

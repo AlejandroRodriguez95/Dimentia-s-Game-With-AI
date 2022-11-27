@@ -27,6 +27,14 @@ public class BoardSlot
         return list;
     }
 
+    public Piece GetTopPiece()
+    {
+        if (currentListIndex > 0)
+            return list[currentListIndex - 1];
+        else 
+            return null;
+    }
+
     public bool AddPiece(Piece piece)
     {
         //Slot is full?
