@@ -19,7 +19,12 @@ public class Debugger : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            board.AddPieceToSlot((0, 0), new PlayerPiece());
+            board.AddPieceToSlot((0, 0), new Tower());
+            board.AddPieceToSlot((0, 0), new Pillow());
+            board.AddPieceToSlot((0, 0), new Pillow());
+            board.AddPieceToSlot((0, 1), new Tower());
+            board.AddPieceToSlot((0, 1), new Pillow());
+            board.AddPieceToSlot((0, 1), new Pillow());
         }
 
         if (Input.GetKeyDown(KeyCode.W))
@@ -29,8 +34,19 @@ public class Debugger : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.E))
         {
-            board.PrintAllPieces();
+            board.PrintPiecesInSlot((0,0));
         }
+
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            board.SelectPiece((0, 0));
+        }
+
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            Debug.Log(board.GetBoard()[0, 1].CheckPieceFitsSlot(board.selectedPiece));
+        }
+
 
     }
 }

@@ -6,6 +6,10 @@ using UnityEngine;
 public class Board
 {
     BoardSlot[,] board;
+    
+    
+    public Piece selectedPiece;
+    List<(int, int)> validMoves; // for selected piece
 
     public BoardSlot GetBoardSlotType((int,int) pos)
     {
@@ -69,15 +73,76 @@ public class Board
     }
 
 
-    public void AddPieceToSlot((int,int) slot, Piece pieceToAdd)
+    public bool AddPieceToSlot((int,int) slot, Piece pieceToAdd)
     {
-        board[slot.Item1, slot.Item2].AddPiece(pieceToAdd);
+        return board[slot.Item1, slot.Item2].AddPiece(pieceToAdd);
     }
 
-    public void RemoveTopPieceFromSlot((int,int) slot)
+    public bool RemoveTopPieceFromSlot((int,int) slot)
     {
-        board[slot.Item1, slot.Item2].RemovePiece();
+        return board[slot.Item1, slot.Item2].RemovePiece();
     }
+
+    public bool MovePlayer(Player player, (int,int) to)
+    {
+
+        player.PlayerPosOnBoard = to;
+        // Check then move
+
+        return true;
+    }
+
+    public bool MovePiece((int, int) to)
+    {
+        
+
+        return true;
+    }
+
+    public bool SelectPiece((int,int) slot)
+    {
+        selectedPiece = (board[slot.Item1, slot.Item2].GetTopPiece());
+        if (selectedPiece != null)
+        {
+            PrintSelectedPiece();
+            return true;
+        }
+
+
+        else
+            return false;
+    }
+
+    public void DeselectPiece() // must be called after successfully? moving a piece
+    {
+        selectedPiece = null;
+    }
+
+    public void PrintSelectedPiece()
+    {
+        Debug.Log(selectedPiece);
+    }
+
+
+    private List<(int, int)> ScanLegalMoves(int radius, (int, int) slot)
+    {
+        List<(int, int)> tempList = new List<(int,int)>();
+
+        for(int i=slot.Item1-radius; i < radius; i++)
+        {
+            for(int j=slot.Item2-radius; j < radius; j++)
+            {
+                if (i < 0 || j < 0)
+                    continue;
+
+                if (board[slot.Item1, slot.Item2].CheckPieceFitsSlot(selectedPiece))
+                    tempList.Add(slot);
+            }
+        }
+        return tempList;
+    }
+
+
 
 
     #region Debugging
@@ -95,6 +160,11 @@ public class Board
         {
             slot.PrintPiecesInSlot();
         }
+    }
+
+    public void PrintPiecesInSlot((int,int) slot)
+    {
+        board[slot.Item1, slot.Item2].PrintPiecesInSlot();
     }
 
 
