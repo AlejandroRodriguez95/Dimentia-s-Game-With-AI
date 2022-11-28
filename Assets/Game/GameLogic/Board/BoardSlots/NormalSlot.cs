@@ -19,7 +19,7 @@ public class NormalSlot : BoardSlot
         switch (piece.PieceType)
         {
             case E_PieceType.PlayerPiece:
-                if (slotContainsTower || slotContainsTower)
+                if (slotContainsPlayer || slotContainsTower)
                     return false;
                 break;
 

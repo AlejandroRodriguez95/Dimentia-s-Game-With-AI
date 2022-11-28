@@ -8,7 +8,7 @@ public class Board
     BoardSlot[,] board;
     
     
-    Piece selectedPiece;
+    public Piece selectedPiece;
     List<(int, int)> validMoves; // for selected piece
 
     public BoardSlot GetBoardSlotType((int,int) pos)
@@ -104,6 +104,7 @@ public class Board
         selectedPiece = (board[slot.Item1, slot.Item2].GetTopPiece());
         if (selectedPiece != null)
         {
+            PrintSelectedPiece();
             return true;
         }
 
@@ -111,6 +112,17 @@ public class Board
         else
             return false;
     }
+
+    public void DeselectPiece() // must be called after successfully? moving a piece
+    {
+        selectedPiece = null;
+    }
+
+    public void PrintSelectedPiece()
+    {
+        Debug.Log(selectedPiece);
+    }
+
 
     private List<(int, int)> ScanLegalMoves(int radius, (int, int) slot)
     {
@@ -148,6 +160,11 @@ public class Board
         {
             slot.PrintPiecesInSlot();
         }
+    }
+
+    public void PrintPiecesInSlot((int,int) slot)
+    {
+        board[slot.Item1, slot.Item2].PrintPiecesInSlot();
     }
 
 

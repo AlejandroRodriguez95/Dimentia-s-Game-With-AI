@@ -15,7 +15,7 @@ public class TeleportSlot : BoardSlot
     {
         if (piece.PieceType == E_PieceType.PlayerPiece)
             return true;
-
+        
         return false;
     }
 
