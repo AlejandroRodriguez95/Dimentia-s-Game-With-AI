@@ -6,10 +6,15 @@ public class Debugger : MonoBehaviour
 {
     Board board;
     GameMode gamemode;
+
+    Player p1;
+    Player p2;
     void Start()
     {
         board = new Board();
         gamemode = new PlayerVsPlayer(board);
+
+
 
     }
 
@@ -19,27 +24,32 @@ public class Debugger : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            board.AddPieceToSlot((0, 0), new Tower());
-            board.AddPieceToSlot((0, 0), new Pillow());
-            board.AddPieceToSlot((0, 0), new Pillow());
-            board.AddPieceToSlot((0, 1), new Tower());
-            board.AddPieceToSlot((0, 1), new Pillow());
-            board.AddPieceToSlot((0, 1), new Pillow());
+            board.AddPieceToSlot((0, 0), new PlayerPiece());
         }
 
         if (Input.GetKeyDown(KeyCode.W))
         {
-            board.RemoveTopPieceFromSlot((0,0));
+            board.MovePlayer(p1, (0, 1));
         }
 
         if (Input.GetKeyDown(KeyCode.E))
         {
-            board.PrintPiecesInSlot((0,0));
+            board.PrintAllPieces();
         }
 
         if (Input.GetKeyDown(KeyCode.S))
         {
-            board.SelectPiece((0, 0));
+            board.SelectPiece((0, 0), false);
+        }
+
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            board.SelectPiece((0, 0), true);
+        }
+
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            board.SelectPiece((0, 0), false);
         }
 
         if (Input.GetKeyDown(KeyCode.D))

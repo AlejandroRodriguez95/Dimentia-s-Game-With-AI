@@ -9,7 +9,8 @@ public class Board
     
     
     public Piece selectedPiece;
-    List<(int, int)> validMoves; // for selected piece
+    public (int, int) selectedSlot;
+    List<(int, int)> legalMoves; // for selected piece
 
     public BoardSlot GetBoardSlotType((int,int) pos)
     {
@@ -85,6 +86,9 @@ public class Board
 
     public bool MovePlayer(Player player, (int,int) to)
     {
+        board[selectedSlot.Item1, selectedSlot.Item2].RemovePiece();
+        board[to.Item1, to.Item2].AddPiece(selectedPiece);
+
 
         player.PlayerPosOnBoard = to;
         // Check then move
@@ -94,40 +98,51 @@ public class Board
 
     public bool MovePiece((int, int) to)
     {
-        
-
         return true;
     }
 
-    public bool SelectPiece((int,int) slot)
+    public bool SelectPiece((int, int) slot, bool ignorePlayers)
     {
-        selectedPiece = (board[slot.Item1, slot.Item2].GetTopPiece());
-        if (selectedPiece != null)
+        selectedPiece = board[slot.Item1, slot.Item2].GetTopPiece();
+
+        if(selectedPiece != null)
         {
-            PrintSelectedPiece();
-            return true;
+            if(ignorePlayers && selectedPiece.PieceType == E_PieceType.PlayerPiece)
+            {
+                Debug.Log("asd");
+                selectedPiece = board[slot.Item1, slot.Item2].GetNextPiece();
+            }
         }
 
+        selectedSlot = slot;
+        PrintSelectedPiece();
 
-        else
+        if (selectedPiece == null)
+        {
+            selectedSlot = (10, 10);
             return false;
+        }
+        else
+            return true;
     }
 
     public void DeselectPiece() // must be called after successfully? moving a piece
     {
         selectedPiece = null;
+        selectedSlot = (10,10);
+
+        legalMoves.Clear();
+        Debug.Log("Selected piece has been cleared.");
     }
 
     public void PrintSelectedPiece()
     {
-        Debug.Log(selectedPiece);
+        Debug.Log($"You have selected: {selectedPiece}");
     }
 
 
-    private List<(int, int)> ScanLegalMoves(int radius, (int, int) slot)
+    private void ScanLegalMoves(int radius, (int, int) slot)
     {
-        List<(int, int)> tempList = new List<(int,int)>();
-
         for(int i=slot.Item1-radius; i < radius; i++)
         {
             for(int j=slot.Item2-radius; j < radius; j++)
@@ -136,10 +151,9 @@ public class Board
                     continue;
 
                 if (board[slot.Item1, slot.Item2].CheckPieceFitsSlot(selectedPiece))
-                    tempList.Add(slot);
+                    legalMoves.Add(slot);
             }
         }
-        return tempList;
     }
 
 
@@ -158,6 +172,7 @@ public class Board
     {
         foreach(BoardSlot slot in board)
         {
+            Debug.Log($"slot: {slot}");
             slot.PrintPiecesInSlot();
         }
     }
