@@ -86,18 +86,28 @@ public class Board
 
     public bool MovePlayer(Player player, (int,int) to)
     {
+        if (selectedPiece.PieceType != E_PieceType.PlayerPiece)
+            return false;
+
         board[selectedSlot.Item1, selectedSlot.Item2].RemovePiece();
         board[to.Item1, to.Item2].AddPiece(selectedPiece);
 
 
         player.PlayerPosOnBoard = to;
-        // Check then move
 
+        DeselectPiece();
         return true;
     }
 
     public bool MovePiece((int, int) to)
     {
+        if (selectedPiece.PieceType == E_PieceType.PlayerPiece)
+            return false;
+
+        board[selectedSlot.Item1, selectedSlot.Item2].RemovePiece();
+        board[to.Item1, to.Item2].AddPiece(selectedPiece);
+
+        DeselectPiece();
         return true;
     }
 
@@ -109,7 +119,6 @@ public class Board
         {
             if(ignorePlayers && selectedPiece.PieceType == E_PieceType.PlayerPiece)
             {
-                Debug.Log("asd");
                 selectedPiece = board[slot.Item1, slot.Item2].GetNextPiece();
             }
         }

@@ -15,6 +15,10 @@ public class GameMode
         this.board = board.GetBoard();
     }
 
+
+
+
+
     public virtual bool CheckIfMoveIsValid((int, int) from, (int, int) to)
     {
         return true;
