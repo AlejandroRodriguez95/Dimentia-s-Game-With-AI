@@ -26,6 +26,7 @@ Rules:
 
 Turn system:
     a turn consists of:
+    
       -> player A turn starts:
           -he moves his player piece to a new available slot in a radius of 1 around his current position
           -once he moves, the game checks if the opponent is trapped or player reached the star
@@ -35,6 +36,7 @@ Turn system:
 
 
 Win conditions:
+
     1. Trapping your opponent (making the opponent unable to move)
     2. reaching the opponent's star slot
     3. Not being able to move a piece after moving the player piece (loss)
@@ -49,6 +51,7 @@ Ideally, thanks to this model, the game would be expandable and a online feature
 How AI works:
 
 -> Similar to stockfish: 
+
           - Scans legal moves in a position
           - Assigns a value to each move, based on different factors
               Factors:
