@@ -35,6 +35,14 @@ public class BoardSlot
             return null;
     }
 
+    public Piece GetNextPiece()
+    {
+        if (currentListIndex - 2 > 0)
+            return list[currentListIndex - 2];
+        else
+            return null;
+    }
+
     public bool AddPiece(Piece piece)
     {
         //Slot is full?
@@ -43,6 +51,7 @@ public class BoardSlot
 
 
         list[currentListIndex] = piece;
+        
 
         // Manage local variables
         switch (piece.PieceType)

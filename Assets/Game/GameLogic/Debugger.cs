@@ -6,10 +6,19 @@ public class Debugger : MonoBehaviour
 {
     Board board;
     GameMode gamemode;
+
+    Player p1;
+    Player p2;
+
+    TurnSystem turnSystem;
     void Start()
     {
         board = new Board();
         gamemode = new PlayerVsPlayer(board);
+
+
+
+        turnSystem = new TurnSystem();
 
     }
 
@@ -17,36 +26,43 @@ public class Debugger : MonoBehaviour
     void Update()
     {
 
+
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            board.AddPieceToSlot((2, 2), new PlayerPiece());
+            p1 = new Player(E_PlayerType.Player, "Alejandro");
+            p1.PlayerPosOnBoard = (2, 2);
+            board.SelectPlayer(p1);
+
+        }
+
+        if (Input.GetKeyDown(KeyCode.F2))
+        {
+            board.PrintLegalMovesForPlayer(p1);
+        }
+
+
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            board.AddPieceToSlot((0, 0), new Tower());
-            board.AddPieceToSlot((0, 0), new Pillow());
-            board.AddPieceToSlot((0, 0), new Pillow());
-            board.AddPieceToSlot((0, 1), new Tower());
-            board.AddPieceToSlot((0, 1), new Pillow());
-            board.AddPieceToSlot((0, 1), new Pillow());
+            board.MovePlayer(p1, (1, 1));
         }
 
         if (Input.GetKeyDown(KeyCode.W))
         {
-            board.RemoveTopPieceFromSlot((0,0));
-        }
-
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            board.PrintPiecesInSlot((0,0));
+            board.AddPieceToSlot((1, 1), new Tower());
+            board.AddPieceToSlot((1, 2), new Tower());
+            board.AddPieceToSlot((1, 3), new Tower());
         }
 
         if (Input.GetKeyDown(KeyCode.S))
         {
-            board.SelectPiece((0, 0));
+            board.ScanPiecesInRangeOfPlayer(p1);
         }
 
-        if (Input.GetKeyDown(KeyCode.D))
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            Debug.Log(board.GetBoard()[0, 1].CheckPieceFitsSlot(board.selectedPiece));
+            board.PrintAllPieces();
         }
-
 
     }
 }

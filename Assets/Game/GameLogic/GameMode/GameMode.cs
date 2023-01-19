@@ -4,36 +4,30 @@ using UnityEngine;
 
 public class GameMode
 {
-    BoardSlot[,] board;
-    Player P1;
-    Player P2;
+    protected BoardSlot[,] board;
+    protected Player P1;
+    protected Player P2;
 
-    Player currentPlayer;
+    protected bool waitingForInput;
+
+    protected Player currentPlayer;
+    protected E_TurnStages currentTurnStage;
+
+    protected TurnSystem turnSystem;
+
+    public bool WaitingForInput
+    {
+        get { return waitingForInput; }
+    }
+
 
     public GameMode(Board board)
     {
         this.board = board.GetBoard();
-    }
-
-    public virtual bool CheckIfMoveIsValid((int, int) from, (int, int) to)
-    {
-        return true;
-    }
-
-    public virtual void MovePiece((int, int) from, (int, int) to)
-    {
-        
-    }
-
-    public virtual void MovePlayer(Player player, (int,int) to)
-    {
-
+        currentTurnStage = E_TurnStages.MovePlayer;
+        turnSystem = new TurnSystem();
     }
 
 
-    public virtual void Test()
-    {
-        board[0, 0] = new NormalSlot();
-    }
 
 }
