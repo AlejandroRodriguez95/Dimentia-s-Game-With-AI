@@ -9,6 +9,8 @@ public class Debugger : MonoBehaviour
 
     Player p1;
     Player p2;
+
+    TurnSystem turnSystem;
     void Start()
     {
         board = new Board();
@@ -16,47 +18,51 @@ public class Debugger : MonoBehaviour
 
 
 
+        turnSystem = new TurnSystem();
+
     }
 
     // Update is called once per frame
     void Update()
     {
 
+
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            board.AddPieceToSlot((2, 2), new PlayerPiece());
+            p1 = new Player(E_PlayerType.Player, "Alejandro");
+            p1.PlayerPosOnBoard = (2, 2);
+            board.SelectPlayer(p1);
+
+        }
+
+        if (Input.GetKeyDown(KeyCode.F2))
+        {
+            board.PrintLegalMovesForPlayer(p1);
+        }
+
+
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            board.AddPieceToSlot((0, 0), new PlayerPiece());
+            board.MovePlayer(p1, (1, 1));
         }
 
         if (Input.GetKeyDown(KeyCode.W))
         {
-            board.MovePlayer(p1, (0, 1));
+            board.AddPieceToSlot((1, 1), new Tower());
+            board.AddPieceToSlot((1, 2), new Tower());
+            board.AddPieceToSlot((1, 3), new Tower());
+        }
+
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            board.ScanPiecesInRangeOfPlayer(p1);
         }
 
         if (Input.GetKeyDown(KeyCode.E))
         {
             board.PrintAllPieces();
         }
-
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            board.SelectPiece((0, 0), false);
-        }
-
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            board.SelectPiece((0, 0), true);
-        }
-
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            board.SelectPiece((0, 0), false);
-        }
-
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            Debug.Log(board.GetBoard()[0, 1].CheckPieceFitsSlot(board.selectedPiece));
-        }
-
 
     }
 }

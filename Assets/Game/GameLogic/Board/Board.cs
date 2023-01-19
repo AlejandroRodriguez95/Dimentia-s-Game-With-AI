@@ -11,6 +11,7 @@ public class Board
     public Piece selectedPiece;
     public (int, int) selectedSlot;
     List<(int, int)> legalMoves; // for selected piece
+    List<(int, int)> piecesInRangeOfPlayer;
 
     public BoardSlot GetBoardSlotType((int,int) pos)
     {
@@ -71,6 +72,10 @@ public class Board
         board[3, 3] = new NormalSlot();
         board[3, 4] = new NormalSlot();
         board[3, 5] = new StarSlot();
+
+        piecesInRangeOfPlayer = new List<(int, int)>();
+        legalMoves = new List<(int, int)>();
+
     }
 
 
@@ -89,6 +94,12 @@ public class Board
         if (selectedPiece.PieceType != E_PieceType.PlayerPiece)
             return false;
 
+        if (legalMoves.Count == 0)
+            return false;
+
+        if (!legalMoves.Contains(to))
+            return false;
+
         board[selectedSlot.Item1, selectedSlot.Item2].RemovePiece();
         board[to.Item1, to.Item2].AddPiece(selectedPiece);
 
@@ -96,6 +107,10 @@ public class Board
         player.PlayerPosOnBoard = to;
 
         DeselectPiece();
+        legalMoves.Clear();
+
+        ScanPiecesInRangeOfPlayer(player);
+
         return true;
     }
 
@@ -103,6 +118,8 @@ public class Board
     {
         if (selectedPiece.PieceType == E_PieceType.PlayerPiece)
             return false;
+
+        
 
         board[selectedSlot.Item1, selectedSlot.Item2].RemovePiece();
         board[to.Item1, to.Item2].AddPiece(selectedPiece);
@@ -123,8 +140,16 @@ public class Board
             }
         }
 
+        if (piecesInRangeOfPlayer.Count == 0)
+            return false;
+
+        if (!piecesInRangeOfPlayer.Contains(slot))
+            return false;
+
         selectedSlot = slot;
         PrintSelectedPiece();
+
+        
 
         if (selectedPiece == null)
         {
@@ -132,7 +157,26 @@ public class Board
             return false;
         }
         else
+        {
             return true;
+        }
+    }
+
+    public bool SelectPlayer(Player toSelect)
+    {
+        SelectPiece(toSelect.PlayerPosOnBoard, false);
+
+        if (selectedPiece == null)
+        {
+            selectedSlot = (10, 10);
+            return false;
+        }
+        else
+        {
+            Debug.Log($"You have selected {toSelect.PlayerName}");
+            ScanLegalMoves(1, toSelect.PlayerPosOnBoard);
+            return true;
+        }
     }
 
     public void DeselectPiece() // must be called after successfully? moving a piece
@@ -150,19 +194,60 @@ public class Board
     }
 
 
-    private void ScanLegalMoves(int radius, (int, int) slot)
+    public bool ScanLegalMoves(int radius, (int, int) slot)
     {
-        for(int i=slot.Item1-radius; i < radius; i++)
+        legalMoves.Clear();
+
+        for(int i=slot.Item1-radius; i <= slot.Item1 + radius; i++)
         {
-            for(int j=slot.Item2-radius; j < radius; j++)
+            for(int j=slot.Item2-radius; j <= slot.Item2 + radius; j++)
             {
                 if (i < 0 || j < 0)
                     continue;
 
-                if (board[slot.Item1, slot.Item2].CheckPieceFitsSlot(selectedPiece))
-                    legalMoves.Add(slot);
+                if (board[i, j].CheckPieceFitsSlot(selectedPiece))
+                    legalMoves.Add((i, j));
             }
         }
+
+        if(legalMoves.Count == 0)
+        {
+            Debug.LogWarning("No legal moves! game over");
+            return false;
+        }
+
+        return true;
+        
+    }
+
+    public bool ScanPiecesInRangeOfPlayer(Player player)
+    {
+        piecesInRangeOfPlayer.Clear();
+
+        for (int i = player.PlayerPosOnBoard.Item1 - 1; i <= player.PlayerPosOnBoard.Item1 + 1; i++)
+        {
+            for (int j = player.PlayerPosOnBoard.Item2 - 1; j <= player.PlayerPosOnBoard.Item2 + 1; j++)
+            {
+                if (i < 0 || j < 0)
+                    continue;
+
+                if(SelectPiece((i, j), true))
+                {
+                    Debug.Log($"{i}, {j}");
+                    piecesInRangeOfPlayer.Add((i, j));
+                }         
+            }
+        }
+
+        SelectPlayer(player);
+
+        if (piecesInRangeOfPlayer.Count == 0)
+        {
+            Debug.LogWarning("No pieces in range! game over");
+            return false;
+        }
+
+        return true;
     }
 
 
@@ -183,6 +268,15 @@ public class Board
         {
             Debug.Log($"slot: {slot}");
             slot.PrintPiecesInSlot();
+        }
+    }
+
+    public void PrintLegalMovesForPlayer(Player player)
+    {
+        ScanLegalMoves(1, player.PlayerPosOnBoard);
+        foreach((int,int) move in legalMoves)
+        {
+            Debug.Log($"x: {move.Item1} y: {move.Item2}");
         }
     }
 

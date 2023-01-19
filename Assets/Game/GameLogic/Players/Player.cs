@@ -15,9 +15,14 @@ public class Player
         set { playerPosOnBoard = value; }
     }
 
+    public string PlayerName
+    {
+        get { return playerName; }
+    }
 
-    public Player(E_PlayerType type)
+    public Player(E_PlayerType type, string playerName)
     {
         playerType = type;
+        this.playerName = playerName;
     }
 }
