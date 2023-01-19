@@ -10,6 +10,7 @@ Rules:
       -> "Pillow"
       -> "Tower"
   -3 different types of slots:
+  
       -> Teleport:
             -2 in opposite corners of the board
             -Only player pieces can be moved over it
