@@ -20,6 +20,10 @@ public class PlayerVsPlayer : GameMode
         waitingForInput = true;
     }
 
+    public void Play(Board board, (int,int) slot)
+    {
+        turnSystem.Play(board, slot, currentTurnStage, currentPlayer);
+    }
 
 
 

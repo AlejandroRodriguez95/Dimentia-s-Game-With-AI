@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GameMode
 {
-    protected BoardSlot[,] board;
+    protected BoardSlot[,] boardSlots;
     protected Player P1;
     protected Player P2;
 
@@ -23,11 +23,10 @@ public class GameMode
 
     public GameMode(Board board)
     {
-        this.board = board.GetBoard();
+        this.boardSlots = board.GetBoard();
         currentTurnStage = E_TurnStages.MovePlayer;
         turnSystem = new TurnSystem();
     }
-
 
 
 }
