@@ -57,5 +57,15 @@ public class Controller : MonoBehaviour
         selectorPositionInArray += 1;
         selector.transform.position = boardView[selectorPositionInArray].transform.position;
     }
+
+
+    public void Select(InputAction.CallbackContext cbc) // Interacts with the model
+    {
+        if (!cbc.started)
+            return;
+
+
+
+    }
     #endregion
 }
