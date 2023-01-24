@@ -49,6 +49,33 @@
                     "processors": "",
                     "interactions": "Tap",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Debug1",
+                    "type": "Button",
+                    "id": "bbb58687-081a-42d8-8785-79c22458d1c2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Tap",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Debug2",
+                    "type": "Button",
+                    "id": "9ffd913f-b718-4bf3-9ba3-05c247a41470",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Tap",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Debug3",
+                    "type": "Button",
+                    "id": "dfcfe20e-ea28-4250-9112-066f8c65348c",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Tap",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -104,6 +131,39 @@
                     "processors": "",
                     "groups": "",
                     "action": "MoveUp",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6efe4b02-fd41-45ab-aafe-adfa8bec1e0b",
+                    "path": "<Keyboard>/numpad1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Debug1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2ce823af-924b-4a32-b9bb-cd39d222d090",
+                    "path": "<Keyboard>/numpad2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Debug2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "720a5f63-ad48-4417-8a76-10bd2f7c044e",
+                    "path": "<Keyboard>/numpad3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Debug3",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

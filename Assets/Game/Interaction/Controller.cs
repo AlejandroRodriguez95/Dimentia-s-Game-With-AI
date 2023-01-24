@@ -5,11 +5,21 @@ using UnityEngine.InputSystem;
 
 public class Controller : MonoBehaviour
 {
-    [SerializeField] GameObject[] boardView;
+    [SerializeField] GameObject[] boardView; // the gameobjects part of the board (visuals)
     private (int, int) selectorPosition; // to interact with the model
+
     private int selectorPositionInArray; // internal variable for this script
 
     [SerializeField] GameObject selector;
+
+    GameMode gameModeRef; // referenced through gamemanager, needed to interact with the model
+
+    public Board board; // for debugging, must be deleted when everything is working!
+
+    public GameMode GameModeRef
+    {
+        set { gameModeRef = value; }
+    }
 
     private void Awake()
     {
@@ -64,8 +74,31 @@ public class Controller : MonoBehaviour
         if (!cbc.started)
             return;
 
-
-
+        gameModeRef.Play(selectorPosition);
     }
+
+
+    // Debugging:
+
+    public void Debug1(InputAction.CallbackContext cbc)
+    {
+        if (!cbc.started)
+            return;
+
+        board.GetBoardSlotPieces((1, 1));
+    }    
+    public void Debug2(InputAction.CallbackContext cbc)
+    {
+        if (!cbc.started)
+            return;
+
+        board.PrintAllPieces();
+    }
+    public void Debug3(InputAction.CallbackContext cbc)
+    {
+        if (!cbc.started)
+            return;
+    }
+
     #endregion
 }

@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameMode
+public abstract class GameMode
 {
     protected BoardSlot[,] boardSlots;
+    protected Board board;
     protected Player P1;
     protected Player P2;
 
@@ -21,12 +22,17 @@ public class GameMode
     }
 
 
-    public GameMode(Board board)
+    public GameMode(Board board, Player p1, Player p2)
     {
         this.boardSlots = board.GetBoard();
-        currentTurnStage = E_TurnStages.MovePlayer;
-        turnSystem = new TurnSystem();
+        this.board = board;
+        currentTurnStage = E_TurnStages.TurnStart;
+        P1 = p1;
+        P2 = p2;
+        P1.PlayerPosOnBoard = (0, 0);
+        P2.PlayerPosOnBoard = (3, 5);
+        turnSystem = new TurnSystem(p1, p2);
     }
 
-
+    public abstract void Play((int, int) slot);
 }

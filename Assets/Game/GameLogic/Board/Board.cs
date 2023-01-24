@@ -89,10 +89,10 @@ public class Board
         return board[slot.Item1, slot.Item2].RemovePiece();
     }
 
-    public bool MovePlayer(Player player, (int,int) to)
+    public bool MovePlayer(ref Player player, (int,int) to)
     {
-        if (selectedPiece.PieceType != E_PieceType.PlayerPiece)
-            return false;
+        //if (selectedPiece.PieceType != E_PieceType.PlayerPiece)
+        //    return false;
 
         if (legalMoves.Count == 0)
             return false;
@@ -100,16 +100,16 @@ public class Board
         if (!legalMoves.Contains(to))
             return false;
 
-        board[selectedSlot.Item1, selectedSlot.Item2].RemovePiece();
+        board[player.PlayerPosOnBoard.Item1, player.PlayerPosOnBoard.Item2].RemovePiece();
         board[to.Item1, to.Item2].AddPiece(selectedPiece);
 
 
         player.PlayerPosOnBoard = to;
 
-        DeselectPiece();
+        //DeselectPiece();
         legalMoves.Clear();
 
-        ScanPiecesInRangeOfPlayer(player);
+        //ScanPiecesInRangeOfPlayer(player);
 
         return true;
     }
@@ -124,13 +124,14 @@ public class Board
         board[selectedSlot.Item1, selectedSlot.Item2].RemovePiece();
         board[to.Item1, to.Item2].AddPiece(selectedPiece);
 
-        DeselectPiece();
+        //DeselectPiece();
         return true;
     }
 
     public bool SelectPiece((int, int) slot, bool ignorePlayers)
     {
         selectedPiece = board[slot.Item1, slot.Item2].GetTopPiece();
+
 
         if(selectedPiece != null)
         {
@@ -175,6 +176,7 @@ public class Board
         {
             Debug.Log($"You have selected {toSelect.PlayerName}");
             ScanLegalMoves(1, toSelect.PlayerPosOnBoard);
+            PrintLegalMovesForPlayer(toSelect);
             return true;
         }
     }
@@ -202,7 +204,7 @@ public class Board
         {
             for(int j=slot.Item2-radius; j <= slot.Item2 + radius; j++)
             {
-                if (i < 0 || j < 0)
+                if (i < 0 || j < 0 || i > 3 || j > 5)
                     continue;
 
                 if (board[i, j].CheckPieceFitsSlot(selectedPiece))
@@ -224,14 +226,18 @@ public class Board
     {
         piecesInRangeOfPlayer.Clear();
 
+
+
         for (int i = player.PlayerPosOnBoard.Item1 - 1; i <= player.PlayerPosOnBoard.Item1 + 1; i++)
         {
             for (int j = player.PlayerPosOnBoard.Item2 - 1; j <= player.PlayerPosOnBoard.Item2 + 1; j++)
             {
-                if (i < 0 || j < 0)
+                if (i < 0 || j < 0 || i > 3 || j > 5)
                     continue;
 
-                if(SelectPiece((i, j), true))
+                var tempPiece = board[i, j].GetTopPiece();
+
+                if (tempPiece != null && tempPiece.PieceType != E_PieceType.PlayerPiece)
                 {
                     Debug.Log($"{i}, {j}");
                     piecesInRangeOfPlayer.Add((i, j));
@@ -239,7 +245,7 @@ public class Board
             }
         }
 
-        SelectPlayer(player);
+        //SelectPlayer(player);
 
         if (piecesInRangeOfPlayer.Count == 0)
         {

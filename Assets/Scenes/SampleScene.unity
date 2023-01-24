@@ -459,50 +459,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &427825712
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 427825714}
-  - component: {fileID: 427825713}
-  m_Layer: 0
-  m_Name: Debugger
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &427825713
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 427825712}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 95ad46ba0b2d38242a13d8518a5cc445, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &427825714
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 427825712}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.65, y: -6.83, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &507436990
 GameObject:
   m_ObjectHideFlags: 0
@@ -2246,7 +2202,7 @@ Transform:
   m_Children:
   - {fileID: 1379419286}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1930567254
 GameObject:
@@ -2426,6 +2382,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1966073712}
   - component: {fileID: 1966073711}
+  - component: {fileID: 1966073713}
   - component: {fileID: 1966073710}
   m_Layer: 0
   m_Name: GameManager
@@ -2514,7 +2471,19 @@ MonoBehaviour:
     m_ActionId: 784d3e94-0d47-48f1-9be6-562bcf71b7be
     m_ActionName: Gameplay/MoveSelector[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1966073710}
+        m_TargetAssemblyTypeName: Controller, Assembly-CSharp
+        m_MethodName: Select
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 4675fa75-fd37-45c8-9568-cc50a591749c
     m_ActionName: Gameplay/Select[/Keyboard/space]
   - m_PersistentCalls:
@@ -2565,6 +2534,54 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 87357dcc-3bca-4984-be6b-e93e8fc7ed0c
     m_ActionName: Gameplay/MoveRight[/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1966073710}
+        m_TargetAssemblyTypeName: Controller, Assembly-CSharp
+        m_MethodName: Debug1
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: bbb58687-081a-42d8-8785-79c22458d1c2
+    m_ActionName: Gameplay/Debug1[/Keyboard/numpad1]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1966073710}
+        m_TargetAssemblyTypeName: Controller, Assembly-CSharp
+        m_MethodName: Debug2
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 9ffd913f-b718-4bf3-9ba3-05c247a41470
+    m_ActionName: Gameplay/Debug2[/Keyboard/numpad2]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1966073710}
+        m_TargetAssemblyTypeName: Controller, Assembly-CSharp
+        m_MethodName: Debug3
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: dfcfe20e-ea28-4250-9112-066f8c65348c
+    m_ActionName: Gameplay/Debug3[/Keyboard/numpad3]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Gameplay
@@ -2583,8 +2600,21 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1966073713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1966073709}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 035a037c698eb134ba0b111fd10f3191, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controller: {fileID: 1966073710}
 --- !u!1 &2034536029
 GameObject:
   m_ObjectHideFlags: 0
