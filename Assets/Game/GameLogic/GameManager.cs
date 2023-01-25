@@ -5,12 +5,19 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] Controller controller;
+    [SerializeField] GameObject[] boardView;
+    [SerializeField] GameObject piecesContainer;
 
     Board board;
     GameMode gameMode;
 
     Player p1;
     Player p2;
+
+    [SerializeField] GameObject Tower;
+    [SerializeField] GameObject Pillow;
+    [SerializeField] GameObject Player1Piece;
+    [SerializeField] GameObject Player2Piece;
 
     TurnSystem turnSystem;
 
@@ -25,7 +32,7 @@ public class GameManager : MonoBehaviour
         controller.GameModeRef = gameMode;
         controller.board = board;
 
-        // fill board with test pieces:
+        // fill (model) board with pieces:
 
         board.AddPieceToSlot((0, 0), new PlayerPiece());
         board.AddPieceToSlot((1, 1), new Tower());
@@ -33,6 +40,67 @@ public class GameManager : MonoBehaviour
         board.AddPieceToSlot((1, 3), new Tower());
 
         board.AddPieceToSlot((3, 5), new PlayerPiece());
+
+        // Update the view
+
+        InitializeView();
+    }
+
+
+
+
+
+    private void InitializeView() // Loads the model data and updates the view accordingly for the first time
+    {
+        // Basically, loops through each board slot, checks where there are pieces and instantiates them on the board
+        // Not the most efficient, but since it's executed 1 time at the start of the game, it doesn't matter.
+        bool firstPlayerSpawned = false;
+        int boardViewIndex = 0;
+        for (int i = 0; i < 6; i++)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                var list = board.GetBoardSlotPieces((j, i)); // list will always have size 4, but some are empty elements. We need to check where the last existing element is!
+                                                             // We want to keep the code as clean and independant as possible, so to avoid creating more get functions on 
+                                                             // the board/boardslot classes, we do a dirty and expensive check here. This function will only run once at the start!
+
+                int maxListIndex = 0;
+                for(int k=0; k < 4; k++)
+                {
+                    if (list[k] == null)
+                    {
+                        maxListIndex = k;
+                        break;
+                    }
+                }
+
+                for(int k=0; k < maxListIndex; k++)
+                {
+
+                    switch (list[k].PieceType)
+                    {
+                        case E_PieceType.PlayerPiece:
+                            if (!firstPlayerSpawned)
+                            {
+                                controller.P1 = Instantiate(Player1Piece, boardView[boardViewIndex].transform.position, Quaternion.identity, piecesContainer.transform);
+                                firstPlayerSpawned = true;
+                            }
+                            else
+                                controller.P2 = Instantiate(Player2Piece, boardView[boardViewIndex].transform.position, Quaternion.identity, piecesContainer.transform);
+
+
+                            break;
+                        case E_PieceType.Pillow:
+                            Instantiate(Pillow, boardView[boardViewIndex].transform.position, Quaternion.identity, piecesContainer.transform);
+                            break;
+                        case E_PieceType.Tower:
+                            Instantiate(Tower, boardView[boardViewIndex].transform.position, Quaternion.identity, piecesContainer.transform);
+                            break;
+                    }
+                }
+                boardViewIndex++;
+            }
+        }
 
 
     }

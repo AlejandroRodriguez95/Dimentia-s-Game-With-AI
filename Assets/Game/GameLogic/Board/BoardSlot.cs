@@ -21,10 +21,9 @@ public class BoardSlot
         currentListIndex = 0;
     }
 
-
     public Piece[] GetPieces()
     {
-        return list;
+        return list; // list will always have size 4
     }
 
     public Piece GetTopPiece()

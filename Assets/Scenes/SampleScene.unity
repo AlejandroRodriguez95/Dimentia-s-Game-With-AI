@@ -1360,6 +1360,37 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1089723124
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1089723125}
+  m_Layer: 0
+  m_Name: Pieces
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1089723125
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1089723124}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1927613274}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1242333137
 GameObject:
   m_ObjectHideFlags: 0
@@ -2201,6 +2232,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1379419286}
+  - {fileID: 1089723125}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2615,6 +2647,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 1966073710}
+  boardView:
+  - {fileID: 925982740}
+  - {fileID: 1320055029}
+  - {fileID: 1423380129}
+  - {fileID: 2078239416}
+  - {fileID: 408692555}
+  - {fileID: 1956503513}
+  - {fileID: 516308014}
+  - {fileID: 1930567254}
+  - {fileID: 1895013322}
+  - {fileID: 1069195646}
+  - {fileID: 1657928991}
+  - {fileID: 1323938155}
+  - {fileID: 551418744}
+  - {fileID: 2034536029}
+  - {fileID: 1352630632}
+  - {fileID: 1031431180}
+  - {fileID: 1431405111}
+  - {fileID: 1242333137}
+  - {fileID: 647590449}
+  - {fileID: 507436990}
+  - {fileID: 246562321}
+  - {fileID: 331344067}
+  - {fileID: 525662585}
+  - {fileID: 1586122165}
+  piecesContainer: {fileID: 1089723124}
+  Tower: {fileID: 7278125421021793778, guid: 9d6ef3c795a5a724190200aa2fe9bbd9, type: 3}
+  Pillow: {fileID: 4236585372566433786, guid: 4d0291cb425a2bb44a6ec37a240db393, type: 3}
+  Player1Piece: {fileID: 6260312215553830507, guid: c756ced319d6fc144b306f87d30920e3, type: 3}
+  Player2Piece: {fileID: 5251593225291218420, guid: 5161c5b49fb6b48438a3885893156a6a, type: 3}
 --- !u!1 &2034536029
 GameObject:
   m_ObjectHideFlags: 0

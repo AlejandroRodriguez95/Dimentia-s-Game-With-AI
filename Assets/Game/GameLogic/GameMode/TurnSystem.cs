@@ -14,7 +14,7 @@ public class TurnSystem
 
 
 
-    public void Play(Board board, (int, int) selectedSlot, ref E_TurnStages currentStage, ref Player currentPlayer)
+    public bool Play(Board board, (int, int) selectedSlot, ref E_TurnStages currentStage, ref Player currentPlayer)
     {
         switch (currentStage)
         {
@@ -23,18 +23,19 @@ public class TurnSystem
                 {
                     currentStage = E_TurnStages.MovePlayer;
                     Debug.Log(currentPlayer.PlayerName);
+                    return true;
                 }
-                Debug.Log(currentStage.ToString());
-                    break;
+                return false;
 
             case E_TurnStages.MovePlayer:
                 if (board.MovePlayer(ref currentPlayer, selectedSlot))
                 {
                     currentStage = E_TurnStages.GameOverCheck1;
                     board.DeselectPiece();
+                    Play(board, selectedSlot, ref currentStage, ref currentPlayer);
+                    return true;
                 }
-                Debug.Log(currentStage.ToString());
-                break;
+                return false;
             
             case E_TurnStages.GameOverCheck1:
                 // perform check
@@ -46,30 +47,30 @@ public class TurnSystem
                 {
                     currentStage = E_TurnStages.GameOver;
                 }
-                Debug.Log(currentStage.ToString());
-                break;
+                return true;
 
             case E_TurnStages.SelectPiece:
                 if (board.SelectPiece(selectedSlot, true))
                 {
                     currentStage = E_TurnStages.MovePiece;
+                    return true;
                 }
-                Debug.Log(currentStage.ToString());
-                break;
+                return false;
 
             case E_TurnStages.MovePiece:
                 if (board.MovePiece(selectedSlot))
                 {
                     currentStage = E_TurnStages.GameOverCheck2;
                     board.DeselectPiece();
+                    Play(board, selectedSlot, ref currentStage, ref currentPlayer);
+                    return true;
                 }
                 else
                 {
                     board.DeselectPiece();
                     currentStage = E_TurnStages.SelectPiece;
                 }
-                Debug.Log(currentStage.ToString());
-                break;
+                    return false;
 
             case E_TurnStages.GameOverCheck2:
                 //perform check
@@ -85,11 +86,12 @@ public class TurnSystem
 
                 currentStage = E_TurnStages.TurnStart;
                 Debug.Log(currentStage.ToString());
-
-                break;
+                return true;
 
             case E_TurnStages.GameOver:
-                break;
+                return true;
+
         }
+        return true;
     }
 }
