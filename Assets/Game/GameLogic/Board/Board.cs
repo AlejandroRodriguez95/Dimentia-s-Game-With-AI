@@ -204,7 +204,7 @@ public class Board
         {
             for(int j=slot.Item2-radius; j <= slot.Item2 + radius; j++)
             {
-                if (i < 0 || j < 0 || i > 3 || j > 5)
+                if (i < 0 || j < 0 || i > 3 || j > 5) // array size is [3, 5]
                     continue;
 
                 if (board[i, j].CheckPieceFitsSlot(selectedPiece))
@@ -232,7 +232,7 @@ public class Board
         {
             for (int j = player.PlayerPosOnBoard.Item2 - 1; j <= player.PlayerPosOnBoard.Item2 + 1; j++)
             {
-                if (i < 0 || j < 0 || i > 3 || j > 5)
+                if (i < 0 || j < 0 || i > 3 || j > 5) // array size is [3, 5]
                     continue;
 
                 var tempPiece = board[i, j].GetTopPiece();

@@ -34,5 +34,5 @@ public abstract class GameMode
         turnSystem = new TurnSystem(p1, p2);
     }
 
-    public abstract void Play((int, int) slot);
+    public abstract bool Play((int, int) slot);
 }
