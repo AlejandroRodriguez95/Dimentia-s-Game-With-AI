@@ -21,6 +21,11 @@ public class BoardSlot
         currentListIndex = 0;
     }
 
+    public E_BoardSlotType BoardSlotType
+    {
+        get { return boardSlotType; }
+    }
+
     public Piece[] GetPieces()
     {
         return list; // list will always have size 4

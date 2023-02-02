@@ -13,6 +13,8 @@ public class Board
     List<(int, int)> legalMoves; // for selected piece
     List<(int, int)> piecesInRangeOfPlayer;
 
+    PlayerPiece playerPiece; // dummy piece for checking if player fits slot
+
     public BoardSlot GetBoardSlotType((int,int) pos)
     {
         return board[pos.Item1, pos.Item2];
@@ -50,7 +52,7 @@ public class Board
         board[0, 2] = new NormalSlot();
         board[0, 3] = new NormalSlot();
         board[0, 4] = new NormalSlot();
-        board[0, 5] = new TeleportSlot();
+        board[0, 5] = new TeleportSlot((3, 0));
 
         board[1, 0] = new NormalSlot();
         board[1, 1] = new NormalSlot();
@@ -66,7 +68,7 @@ public class Board
         board[2, 4] = new NormalSlot();
         board[2, 5] = new NormalSlot();
 
-        board[3, 0] = new TeleportSlot();
+        board[3, 0] = new TeleportSlot((0, 5));
         board[3, 1] = new NormalSlot();
         board[3, 2] = new NormalSlot();
         board[3, 3] = new NormalSlot();
@@ -75,6 +77,7 @@ public class Board
 
         piecesInRangeOfPlayer = new List<(int, int)>();
         legalMoves = new List<(int, int)>();
+        playerPiece = new PlayerPiece();
 
     }
 
@@ -100,6 +103,9 @@ public class Board
         if (!legalMoves.Contains(to))
             return false;
 
+        if (board[to.Item1, to.Item2] is TeleportSlot teleportSlot)
+            to = teleportSlot.Target; // should've used an event, instead. With this, we also have to manually change the view!
+
         board[player.PlayerPosOnBoard.Item1, player.PlayerPosOnBoard.Item2].RemovePiece();
         board[to.Item1, to.Item2].AddPiece(selectedPiece);
 
@@ -114,12 +120,14 @@ public class Board
         return true;
     }
 
+
     public bool MovePiece((int, int) to)
     {
         if (selectedPiece.PieceType == E_PieceType.PlayerPiece)
             return false;
 
-        
+        if (!legalMoves.Contains(to))
+            return false;
 
         board[selectedSlot.Item1, selectedSlot.Item2].RemovePiece();
         board[to.Item1, to.Item2].AddPiece(selectedPiece);
@@ -176,7 +184,7 @@ public class Board
         {
             Debug.Log($"You have selected {toSelect.PlayerName}");
             ScanLegalMoves(1, toSelect.PlayerPosOnBoard);
-            PrintLegalMovesForPlayer(toSelect);
+            //PrintLegalMovesForPlayer(toSelect);
             return true;
         }
     }
@@ -239,7 +247,7 @@ public class Board
 
                 if (tempPiece != null && tempPiece.PieceType != E_PieceType.PlayerPiece)
                 {
-                    Debug.Log($"{i}, {j}");
+                    //Debug.Log($"{i}, {j}");
                     piecesInRangeOfPlayer.Add((i, j));
                 }         
             }
@@ -254,6 +262,24 @@ public class Board
         }
 
         return true;
+    }
+
+
+    public bool PlayerIsTrapped(Player player)
+    {
+        for (int i = player.PlayerPosOnBoard.Item1 - 1; i <= player.PlayerPosOnBoard.Item1 + 1; i++)
+        {
+            for (int j = player.PlayerPosOnBoard.Item2 - 1; j <= player.PlayerPosOnBoard.Item2 + 1; j++)
+            {
+                if (i < 0 || j < 0 || i > 3 || j > 5) // array size is [3, 5]
+                    continue;
+
+                if (board[i, j].CheckPieceFitsSlot(playerPiece))
+                    return true;
+            }
+        }
+
+        return false;
     }
 
 

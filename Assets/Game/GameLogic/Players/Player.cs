@@ -8,6 +8,7 @@ public class Player
     double coins;
     E_PlayerType playerType;
     (int, int) playerPosOnBoard;
+    (int, int) goal;
 
     public (int,int) PlayerPosOnBoard
     {
@@ -20,9 +21,18 @@ public class Player
         get { return playerName; }
     }
 
-    public Player(E_PlayerType type, string playerName)
+    public bool PlayerHasNotReachedGoal()
+    {
+        if (goal == PlayerPosOnBoard)
+            return false;
+
+        return true;
+    }
+
+    public Player(E_PlayerType type, string playerName, (int,int) goal)
     {
         playerType = type;
         this.playerName = playerName;
+        this.goal = goal;
     }
 }
