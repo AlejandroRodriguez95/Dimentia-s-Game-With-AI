@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public delegate void OnGameOverEvent();
+    public static event OnGameOverEvent OnGameOver;
+
     [SerializeField] Controller controller;
     [SerializeField] GameObject[] boardView;
     [SerializeField] GameObject piecesContainer;
@@ -21,10 +24,14 @@ public class GameManager : MonoBehaviour
 
     TurnSystem turnSystem;
 
+
+
+
+
     private void Start()
     {
-        p1 = new Player(E_PlayerType.Player, "Alejandro");
-        p2 = new Player(E_PlayerType.Player, "P2");
+        p1 = new Player(E_PlayerType.Player, "Alejandro", (0,5));
+        p2 = new Player(E_PlayerType.Player, "P2", (0, 0));
 
         board = new Board();
         gameMode = new PlayerVsPlayer(board, p1, p2);
@@ -46,7 +53,14 @@ public class GameManager : MonoBehaviour
         InitializeView();
     }
 
-
+    private void Update()
+    {
+        if(OnGameOver != null) // GameOver event
+        {
+            OnGameOver.Invoke();
+            OnGameOver = null;
+        }
+    }
 
 
 
@@ -56,6 +70,17 @@ public class GameManager : MonoBehaviour
         // Not the most efficient, but since it's executed 1 time at the start of the game, it doesn't matter.
         bool firstPlayerSpawned = false;
         int boardViewIndex = 0;
+
+        Stack<GameObject>[] piecesReferenceForController = new Stack<GameObject>[24];
+
+        for(int i=0; i<24; i++)
+        {
+            piecesReferenceForController[i] = new Stack<GameObject>();
+        }
+
+
+        
+
         for (int i = 0; i < 6; i++)
         {
             for (int j = 0; j < 4; j++)
@@ -76,6 +101,8 @@ public class GameManager : MonoBehaviour
 
                 for(int k=0; k < maxListIndex; k++)
                 {
+                    int addOnIndex = i * 4 + j;
+                    //Debug.Log(addOnIndex);
 
                     switch (list[k].PieceType)
                     {
@@ -91,17 +118,22 @@ public class GameManager : MonoBehaviour
 
                             break;
                         case E_PieceType.Pillow:
-                            Instantiate(Pillow, boardView[boardViewIndex].transform.position, Quaternion.identity, piecesContainer.transform);
+                            piecesReferenceForController[addOnIndex].Push(Instantiate(Pillow, boardView[boardViewIndex].transform.position, Quaternion.identity, piecesContainer.transform));
                             break;
                         case E_PieceType.Tower:
-                            Instantiate(Tower, boardView[boardViewIndex].transform.position, Quaternion.identity, piecesContainer.transform);
+                            piecesReferenceForController[addOnIndex].Push(Instantiate(Tower, boardView[boardViewIndex].transform.position, Quaternion.identity, piecesContainer.transform));
                             break;
+
                     }
+                            // add (top piece on slot) reference to the controller:
+
+                    //Debug.Log(piecesReferenceForController[addOnIndex].Peek());
                 }
                 boardViewIndex++;
             }
         }
 
+        controller.PiecesReferences = piecesReferenceForController;
 
     }
 

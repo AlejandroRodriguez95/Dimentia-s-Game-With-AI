@@ -18,7 +18,7 @@ public class PlayerVsPlayer : GameMode
         waitingForInput = true;
     }
 
-    public override bool Play((int,int) slot)
+    public override bool Play((int,int) slot, ref E_TurnStages currentTurnStage)
     {
         return turnSystem.Play(board, slot, ref currentTurnStage, ref currentPlayer);
     }

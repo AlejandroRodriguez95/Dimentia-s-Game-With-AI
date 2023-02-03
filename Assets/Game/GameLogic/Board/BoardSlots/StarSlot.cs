@@ -11,6 +11,7 @@ public class StarSlot : BoardSlot
         boardSlotType = E_BoardSlotType.Star;
     }
 
+
     public override bool CheckPieceFitsSlot(Piece piece)
     {
         if (SlotIsFull())
