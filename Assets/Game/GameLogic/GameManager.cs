@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject[] boardView;
     [SerializeField] GameObject piecesContainer;
 
-    Board board;
+    public static Board board;
     GameMode gameMode;
 
     Player p1;
@@ -24,29 +24,13 @@ public class GameManager : MonoBehaviour
 
     TurnSystem turnSystem;
 
-
+    // Debugging:
 
 
 
     private void Start()
     {
-        p1 = new Player(E_PlayerType.Player, "Alejandro", (0,5));
-        p2 = new Player(E_PlayerType.Player, "P2", (0, 0));
-
-        board = new Board();
-        gameMode = new PlayerVsPlayer(board, p1, p2);
-
-        controller.GameModeRef = gameMode;
-        controller.board = board;
-
-        // fill (model) board with pieces:
-
-        board.AddPieceToSlot((0, 0), new PlayerPiece());
-        board.AddPieceToSlot((1, 1), new Tower());
-        board.AddPieceToSlot((1, 2), new Tower());
-        board.AddPieceToSlot((1, 3), new Tower());
-
-        board.AddPieceToSlot((3, 5), new PlayerPiece());
+        InitializeGame(E_Gamemode.PvAI, "Alejandro", E_AIType.AI_random);
 
         // Update the view
 
@@ -137,4 +121,60 @@ public class GameManager : MonoBehaviour
 
     }
 
+    private void InitializeGame(E_Gamemode gamemode, string playerName, E_AIType AI_Type)
+    {
+        switch (gamemode)
+        {
+            case E_Gamemode.PvP:
+                board = new Board();
+
+                p1 = new Player(E_PlayerType.Player, playerName, (0, 0));
+                p2 = new Player(E_PlayerType.AI_Random, "P2", (0, 5));
+                //p2 = new Player(E_PlayerType.Player, "P2", (0, 0));
+
+                gameMode = new PlayerVsPlayer(board, p1, p2);
+
+                controller.GameModeRef = gameMode;
+                controller.board = board;
+
+                // fill (model) board with pieces:
+
+                board.AddPieceToSlot((0, 0), new PlayerPiece());
+                board.AddPieceToSlot((1, 1), new Tower());
+                board.AddPieceToSlot((1, 2), new Tower());
+                board.AddPieceToSlot((1, 3), new Tower());
+
+                board.AddPieceToSlot((3, 5), new PlayerPiece());
+                break;
+            case E_Gamemode.PvAI:
+                switch (AI_Type)
+                {
+                    case E_AIType.AI_random:
+                        board = new Board();
+
+                        p1 = new Player(E_PlayerType.Player, playerName, (0, 0));
+                        p2 = new Player(E_PlayerType.AI_Random, "Bot", (0, 5));
+
+                        gameMode = new PlayerVsPlayer(board, p1, p2);
+
+                        controller.GameModeRef = gameMode;
+                        controller.board = board;
+
+                        // fill (model) board with pieces:
+
+                        board.AddPieceToSlot((0, 0), new PlayerPiece());
+                        board.AddPieceToSlot((1, 1), new Tower());
+                        board.AddPieceToSlot((1, 2), new Tower());
+                        board.AddPieceToSlot((1, 3), new Tower());
+
+                        board.AddPieceToSlot((3, 5), new PlayerPiece());
+                        break;
+
+                    case E_AIType.AI_smart:
+                        break;
+                }
+
+                break;
+        }
+    }
 }

@@ -9,7 +9,15 @@ public enum E_BoardSlotType
 public enum E_PlayerType
 {
     Player,
-    AI
+    AI_Random,
+    AI_Smart
+}
+
+public enum E_AIType
+{
+    AI_random,
+    AI_smart,
+    none
 }
 
 public enum E_PieceType
@@ -17,6 +25,13 @@ public enum E_PieceType
     PlayerPiece,
     Tower,
     Pillow
+}
+public enum E_Gamemode
+{
+    PvP,
+    PvAI,
+    Online,
+    Tutorial
 }
 
 public enum E_TurnStages

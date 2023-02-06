@@ -199,7 +199,8 @@ public class Controller : MonoBehaviour
         if (!cbc.started)
             return;
 
-        board.PrintAllPieces();
+        (int, int) move = (-1, -1);
+        Debug.Log(Player.ai.GenerateMove(ref move, E_TurnStages.MovePlayer));
     }
     public void Debug3(InputAction.CallbackContext cbc)
     {
