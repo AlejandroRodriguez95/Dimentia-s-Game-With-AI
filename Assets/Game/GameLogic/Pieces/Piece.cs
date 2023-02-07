@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Piece
+public abstract class Piece
 {
     protected E_PieceType pieceType;
 
-    public E_PieceType PieceType
+    public virtual E_PieceType PieceType
     {
         get { return pieceType; }
     }

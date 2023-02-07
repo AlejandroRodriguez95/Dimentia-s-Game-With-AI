@@ -11,6 +11,8 @@ public class Board
     public Piece selectedPiece;
     public (int, int) selectedSlot;
     List<(int, int)> legalMoves; // for selected piece
+
+    List<(int, int)> AILegalMoves; // for selected AI
     List<(int, int)> piecesInRangeOfPlayer;
 
     PlayerPiece playerPiece; // dummy piece for checking if player fits slot
@@ -78,6 +80,7 @@ public class Board
         piecesInRangeOfPlayer = new List<(int, int)>();
         legalMoves = new List<(int, int)>();
         playerPiece = new PlayerPiece();
+        AILegalMoves = new List<(int, int)>();
 
     }
 
@@ -201,6 +204,32 @@ public class Board
     public void PrintSelectedPiece()
     {
         Debug.Log($"You have selected: {selectedPiece}");
+    }
+
+    public List<(int, int)> ReturnLegalMovesForPlayer(Player player, int radius)
+    {
+        Debug.Log("hello");
+        AILegalMoves.Clear();
+        var slot = player.PlayerPosOnBoard;
+        for (int i = slot.Item1 - radius; i <= slot.Item1 + radius; i++)
+        {
+            for (int j = slot.Item2 - radius; j <= slot.Item2 + radius; j++)
+            {
+                if (i < 0 || j < 0 || i > 3 || j > 5) // array size is [3, 5]
+                    continue;
+
+                if (board[i, j].CheckPieceFitsSlot(selectedPiece))
+                    AILegalMoves.Add((i, j));
+            }
+        }
+
+        if (AILegalMoves.Count == 0)
+        {
+            Debug.LogWarning("AI couldn't find any legal moves!");
+            return AILegalMoves;
+        }
+
+        return AILegalMoves;
     }
 
 
