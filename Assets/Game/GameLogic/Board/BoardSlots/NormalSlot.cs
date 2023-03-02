@@ -42,4 +42,5 @@ public class NormalSlot : BoardSlot
     {
         return "N";
     }
+
 }

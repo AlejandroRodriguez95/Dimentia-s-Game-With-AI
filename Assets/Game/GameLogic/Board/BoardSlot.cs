@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,9 +22,24 @@ public class BoardSlot
         currentListIndex = 0;
     }
 
+    public int CurrentPillowsInSlot
+    {
+        get { return currentPillowsInSlot; }
+    }
     public E_BoardSlotType BoardSlotType
     {
         get { return boardSlotType; }
+    }
+
+    public bool SlotContainsPlayer
+    {
+        get { return slotContainsPlayer; }
+    }
+
+    public int CurrentListIndex
+    {
+        get { return currentListIndex; }
+        set { currentListIndex = value; }
     }
 
     public Piece[] GetPieces()
@@ -41,10 +57,35 @@ public class BoardSlot
 
     public Piece GetNextPiece()
     {
-        if (currentListIndex - 2 > 0)
+        if (currentListIndex - 2 >= 0)
             return list[currentListIndex - 2];
         else
             return null;
+    }    
+    public bool RemoveNextPiece()
+    {
+        if (currentListIndex - 2 >= 0)
+        {
+            switch (list[currentListIndex - 2].PieceType)
+            {
+                case E_PieceType.Tower:
+                    slotContainsTower = false;
+                    break;
+                case E_PieceType.Pillow:
+                    currentPillowsInSlot--;
+                    break;
+                case E_PieceType.PlayerPiece:
+                    slotContainsPlayer = false;
+                    break;
+            }
+
+            list[currentListIndex - 2] = list[currentListIndex - 1];
+            list[currentListIndex - 1] = null;
+            currentListIndex--;
+            return true;
+        }
+        else
+            return false;
     }
 
     public bool AddPiece(Piece piece)
@@ -52,25 +93,33 @@ public class BoardSlot
         //Slot is full?
         if (SlotIsFull())
             return false;
-
-
-        list[currentListIndex] = piece;
         
+
 
         // Manage local variables
         switch (piece.PieceType)
         {
             case E_PieceType.Tower:
                 slotContainsTower = true;
+                list[currentListIndex] = piece;
                 break;
             case E_PieceType.Pillow:
+                if (slotContainsPlayer)
+                {
+                    list[currentListIndex] = list[currentListIndex-1];
+                    list[currentListIndex - 1] = piece;
+                }
+                else
+                {
+                    list[currentListIndex] = piece;
+                }
                 currentPillowsInSlot++;
                 break;
             case E_PieceType.PlayerPiece:
                 slotContainsPlayer = true;
+                list[currentListIndex] = piece;
                 break;
         }
-
         currentListIndex++;
         return true;
     }
@@ -80,6 +129,7 @@ public class BoardSlot
         if (SlotIsEmpty())
             return false;
 
+        
 
         currentListIndex--;
 
@@ -93,6 +143,7 @@ public class BoardSlot
                 currentPillowsInSlot--;
                 break;
             case E_PieceType.PlayerPiece:
+                //Debug.Log($"Deleted player!");
                 slotContainsPlayer = false;
                 break;
         }
@@ -135,9 +186,10 @@ public class BoardSlot
     {
         for(int i=0; i<currentListIndex; i++)
         {
-            Debug.Log(list[i].ToString());
+            Debug.Log($"{list[i].ToString()}");
         }
     }
+
 
     #endregion
 }

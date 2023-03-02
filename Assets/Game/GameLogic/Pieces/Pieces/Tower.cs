@@ -8,4 +8,9 @@ public class Tower : Piece
     {
         pieceType = E_PieceType.Tower;
     }
+
+    public override Piece Clone()
+    {
+        return new Tower();
+    }
 }

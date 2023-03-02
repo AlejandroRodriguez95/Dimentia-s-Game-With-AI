@@ -6,6 +6,7 @@ public abstract class AI
 {
     protected Board boardReference;
     protected List<(int, int)> legalMoves;
+    protected List<(int, int)> piecesInRange;
     protected Player player;
 
     public AI(Board boardReference, Player player)
@@ -15,5 +16,5 @@ public abstract class AI
         legalMoves = new List<(int, int)>();
     }
 
-    public abstract bool GenerateMove(ref (int,int) AImove, E_TurnStages turnstage);
+    public abstract bool GenerateMove(ref (int,int) AImove, E_TurnStages turnstage); // should generate a move for the Play() method
 }

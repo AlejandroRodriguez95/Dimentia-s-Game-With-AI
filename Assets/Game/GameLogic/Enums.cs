@@ -44,3 +44,13 @@ public enum E_TurnStages
     GameOverCheck2, // check if game over (enemy trapped, reached star)
     GameOver // Display gzgzgz
 }
+
+
+public enum E_AIDefaultBehavior
+{
+    attackHotArea,
+    defendHotArea,
+    trapOpponent,
+    defendSelfFromTrap,
+    debugging
+}

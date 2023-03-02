@@ -8,4 +8,9 @@ public class Pillow : Piece
     {
         pieceType = E_PieceType.Pillow;
     }
+
+    public override Piece Clone()
+    {
+        return new Pillow();
+    }
 }

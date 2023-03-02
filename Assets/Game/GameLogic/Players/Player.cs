@@ -1,14 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player
+public class Player : ICloneable
 {
     string playerName;
     double coins;
     E_PlayerType playerType;
 
-    public static AI ai;
+    private AI aI;
     (int, int) playerPosOnBoard;
     (int, int) goal;
 
@@ -22,6 +23,11 @@ public class Player
     public string PlayerName
     {
         get { return playerName; }
+    }
+
+    public AI AI
+    {
+        get { return aI; }
     }
 
     public bool PlayerHasNotReachedGoal()
@@ -44,11 +50,21 @@ public class Player
                 break;
             case E_PlayerType.AI_Random:
                 //initiate AI player
-                ai = new RandomMoves(GameManager.board, this);
+                aI = new RandomMoves(GameManager.board, this);
                 break;
             case E_PlayerType.AI_Smart:
                 //initiate AI player
+                aI = new Smart(GameManager.board, this);
                 break;
         }
     }
+
+    public object Clone()
+    {
+        Player clone = new Player(playerType, playerName, goal);
+        clone.coins = coins;
+        clone.PlayerPosOnBoard = PlayerPosOnBoard;
+        return clone;
+    }
+
 }

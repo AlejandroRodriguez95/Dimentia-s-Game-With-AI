@@ -8,4 +8,9 @@ public class PlayerPiece : Piece
     {
         pieceType = E_PieceType.PlayerPiece;
     }
+
+    public override Piece Clone()
+    {
+        return new PlayerPiece();
+    }
 }

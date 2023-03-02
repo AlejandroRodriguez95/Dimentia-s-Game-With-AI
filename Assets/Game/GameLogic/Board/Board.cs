@@ -1,9 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 
-public class Board
+public class Board : ICloneable
 {
     BoardSlot[,] board;
     
@@ -13,6 +14,8 @@ public class Board
     List<(int, int)> legalMoves; // for selected piece
 
     List<(int, int)> AILegalMoves; // for selected AI
+    List<(int, int)> AILegalPieceMoves; // for selected AI
+    List<(int, int)> enemyLegalMoves;
     List<(int, int)> piecesInRangeOfPlayer;
 
     PlayerPiece playerPiece; // dummy piece for checking if player fits slot
@@ -30,6 +33,11 @@ public class Board
     public BoardSlot[,] GetBoard()
     {
         return board;
+    }
+
+    public List<(int,int)> legalMovesForAI
+    {
+        get { return AILegalMoves; }
     }
 
     /// <Summary>
@@ -81,7 +89,8 @@ public class Board
         legalMoves = new List<(int, int)>();
         playerPiece = new PlayerPiece();
         AILegalMoves = new List<(int, int)>();
-
+        AILegalPieceMoves = new List<(int, int)>();
+        enemyLegalMoves = new List<(int, int)>();
     }
 
 
@@ -93,6 +102,18 @@ public class Board
     public bool RemoveTopPieceFromSlot((int,int) slot)
     {
         return board[slot.Item1, slot.Item2].RemovePiece();
+    }
+
+    public char GetSelectedPieceType()
+    {
+        switch (selectedPiece.PieceType)
+        {
+            case E_PieceType.Tower:
+                return 'T';
+            case E_PieceType.Pillow:
+                return 'P';
+        }
+        return 'F';
     }
 
     public bool MovePlayer(ref Player player, (int,int) to)
@@ -109,6 +130,8 @@ public class Board
         if (board[to.Item1, to.Item2] is TeleportSlot teleportSlot)
             to = teleportSlot.Target; // should've used an event, instead. With this, we also have to manually change the view!
 
+
+        //Debug.Log(player.PlayerPosOnBoard);
         board[player.PlayerPosOnBoard.Item1, player.PlayerPosOnBoard.Item2].RemovePiece();
         board[to.Item1, to.Item2].AddPiece(selectedPiece);
 
@@ -123,6 +146,26 @@ public class Board
         return true;
     }
 
+    public bool AIMovePlayer(ref Player player, (int, int) to)
+    {
+        //if (selectedPiece.PieceType != E_PieceType.PlayerPiece)
+        //    return false;
+
+
+        if (board[to.Item1, to.Item2] is TeleportSlot teleportSlot)
+            to = teleportSlot.Target; // should've used an event, instead. With this, we also have to manually change the view!
+
+        board[player.PlayerPosOnBoard.Item1, player.PlayerPosOnBoard.Item2].RemovePiece();
+        board[to.Item1, to.Item2].AddPiece(selectedPiece);
+
+        //Debug.Log($"AIMovePlayer has moved {selectedPiece} to {to}");
+
+        player.PlayerPosOnBoard = to;
+
+        return true;
+    }
+
+
 
     public bool MovePiece((int, int) to)
     {
@@ -132,9 +175,46 @@ public class Board
         if (!legalMoves.Contains(to))
             return false;
 
-        board[selectedSlot.Item1, selectedSlot.Item2].RemovePiece();
-        board[to.Item1, to.Item2].AddPiece(selectedPiece);
+        bool useNextPiece = false;
 
+        if (board[selectedSlot.Item1, selectedSlot.Item2].SlotContainsPlayer)
+            useNextPiece = true;
+
+
+        if (useNextPiece)
+        {
+            board[selectedSlot.Item1, selectedSlot.Item2].RemoveNextPiece();
+            board[to.Item1, to.Item2].AddPiece(selectedPiece);
+
+            //Debug.Log($"Moved {selectedPiece} from {selectedSlot} to {to} using RemoveNextPiece()");
+        }
+        else
+        {
+            board[selectedSlot.Item1, selectedSlot.Item2].RemovePiece();
+            board[to.Item1, to.Item2].AddPiece(selectedPiece);
+            //Debug.Log($"Moved {selectedPiece} from {selectedSlot} to {to}");
+        }
+
+        //DeselectPiece();
+        return true;
+    }    
+    public bool AIMovePiece((int, int) to, bool useNextPiece)
+    {
+        if(useNextPiece)
+        {
+            board[selectedSlot.Item1, selectedSlot.Item2].RemoveNextPiece();
+            board[to.Item1, to.Item2].AddPiece(selectedPiece);
+
+            //Debug.Log($"Moved {selectedPiece} from {selectedSlot} to {to} using RemoveNextPiece()");
+        }
+        else
+        {
+            board[selectedSlot.Item1, selectedSlot.Item2].RemovePiece();
+            board[to.Item1, to.Item2].AddPiece(selectedPiece);
+            //Debug.Log($"Moved {selectedPiece} from {selectedSlot} to {to}");
+        }
+
+        //Debug.Log($"moved piece to {to}");
         //DeselectPiece();
         return true;
     }
@@ -142,7 +222,6 @@ public class Board
     public bool SelectPiece((int, int) slot, bool ignorePlayers)
     {
         selectedPiece = board[slot.Item1, slot.Item2].GetTopPiece();
-
 
         if(selectedPiece != null)
         {
@@ -159,7 +238,7 @@ public class Board
             return false;
 
         selectedSlot = slot;
-        PrintSelectedPiece();
+        //PrintSelectedPiece();
 
         
 
@@ -172,6 +251,25 @@ public class Board
         {
             return true;
         }
+    }   
+    public bool AISelectPiece((int, int) slot, bool ignorePlayers) // return value: true means next piece must be used, false means continue with the top piece
+    {
+        bool nextPieceUsed = false;
+        selectedPiece = board[slot.Item1, slot.Item2].GetTopPiece();
+
+
+        if(selectedPiece != null)
+        {
+            if(ignorePlayers && selectedPiece.PieceType == E_PieceType.PlayerPiece)
+            {
+                selectedPiece = board[slot.Item1, slot.Item2].GetNextPiece();
+                nextPieceUsed = true;
+            }
+        }
+
+        selectedSlot = slot;
+
+        return nextPieceUsed;
     }
 
     public bool SelectPlayer(Player toSelect)
@@ -185,11 +283,18 @@ public class Board
         }
         else
         {
-            Debug.Log($"You have selected {toSelect.PlayerName}");
+            //Debug.Log($"You have selected {toSelect.PlayerName}");
             ScanLegalMoves(1, toSelect.PlayerPosOnBoard);
             //PrintLegalMovesForPlayer(toSelect);
             return true;
         }
+    }    
+    public bool AISelectPlayer(Player toSelect)
+    {
+        AISelectPiece(toSelect.PlayerPosOnBoard, false);
+        //PrintPiecesInSlot(toSelect.PlayerPosOnBoard);
+        //Debug.Log($"AI has selected {toSelect.PlayerName} at position: {toSelect.PlayerPosOnBoard}");
+        return true;
     }
 
     public void DeselectPiece() // must be called after successfully? moving a piece
@@ -198,17 +303,16 @@ public class Board
         selectedSlot = (10,10);
 
         legalMoves.Clear();
-        Debug.Log("Selected piece has been cleared.");
+        //Debug.Log("Selected piece has been cleared.");
     }
 
     public void PrintSelectedPiece()
     {
-        Debug.Log($"You have selected: {selectedPiece}");
+        Debug.Log($"You have selected: {selectedPiece} at position: {selectedSlot}");
     }
 
     public List<(int, int)> ReturnLegalMovesForPlayer(Player player, int radius)
     {
-        Debug.Log("hello");
         AILegalMoves.Clear();
         var slot = player.PlayerPosOnBoard;
         for (int i = slot.Item1 - radius; i <= slot.Item1 + radius; i++)
@@ -218,7 +322,7 @@ public class Board
                 if (i < 0 || j < 0 || i > 3 || j > 5) // array size is [3, 5]
                     continue;
 
-                if (board[i, j].CheckPieceFitsSlot(selectedPiece))
+                if (board[i, j].CheckPieceFitsSlot(selectedPiece)  && (i, j) != player.PlayerPosOnBoard)
                     AILegalMoves.Add((i, j));
             }
         }
@@ -230,8 +334,57 @@ public class Board
         }
 
         return AILegalMoves;
-    }
+    } // AI method
+        public List<(int, int)> ReturnLegalMovesForEnemy(Player player, int radius)
+    {
+        enemyLegalMoves.Clear();
+        var slot = player.PlayerPosOnBoard;
+        for (int i = slot.Item1 - radius; i <= slot.Item1 + radius; i++)
+        {
+            for (int j = slot.Item2 - radius; j <= slot.Item2 + radius; j++)
+            {
+                if (i < 0 || j < 0 || i > 3 || j > 5) // array size is [3, 5]
+                    continue;
 
+                if (board[i, j].CheckPieceFitsSlot(selectedPiece) && (i, j) != player.PlayerPosOnBoard)
+                    enemyLegalMoves.Add((i, j));
+            }
+        }
+
+        if (enemyLegalMoves.Count == 0)
+        {
+            Debug.LogWarning("AI couldn't find any legal moves!");
+            return enemyLegalMoves;
+        }
+
+        return enemyLegalMoves;
+    } // AI method
+
+
+    public List<(int, int)> ReturnLegalMovesForPieces(Player player, int radius)
+    {
+        AILegalPieceMoves.Clear();
+        var slot = player.PlayerPosOnBoard;
+        for (int i = slot.Item1 - radius; i <= slot.Item1 + radius; i++)
+        {
+            for (int j = slot.Item2 - radius; j <= slot.Item2 + radius; j++)
+            {
+                if (i < 0 || j < 0 || i > 3 || j > 5) // array size is [3, 5]
+                    continue;
+
+                if (board[i, j].CheckPieceFitsSlot(selectedPiece) && selectedSlot != (i, j))
+                    AILegalPieceMoves.Add((i, j));
+            }
+        }
+
+        if (AILegalMoves.Count == 0)
+        {
+            Debug.LogWarning("AI couldn't find any legal moves for pieces!");
+            return AILegalPieceMoves;
+        }
+
+        return AILegalPieceMoves;
+    } // AI method
 
     public bool ScanLegalMoves(int radius, (int, int) slot)
     {
@@ -244,7 +397,7 @@ public class Board
                 if (i < 0 || j < 0 || i > 3 || j > 5) // array size is [3, 5]
                     continue;
 
-                if (board[i, j].CheckPieceFitsSlot(selectedPiece))
+                if (board[i, j].CheckPieceFitsSlot(selectedPiece) && selectedSlot != (i, j))
                     legalMoves.Add((i, j));
             }
         }
@@ -257,6 +410,38 @@ public class Board
 
         return true;
         
+    }
+
+    public int AmountOfLegalMovesForPlayer(Player player)
+    {
+        int legalMoves = 0;
+
+        for (int i = player.PlayerPosOnBoard.Item1 - 1; i <= player.PlayerPosOnBoard.Item1 + 1; i++)
+        {
+            for (int j = player.PlayerPosOnBoard.Item2 - 1; j <= player.PlayerPosOnBoard.Item2 + 1; j++)
+            {
+                if (i < 0 || j < 0 || i > 3 || j > 5) // array size is [3, 5]
+                    continue;
+
+                var tempPiece = board[i, j].GetTopPiece();
+
+                if (tempPiece == null)
+                    continue;
+
+                if (tempPiece.PieceType == E_PieceType.PlayerPiece)
+                {
+                    tempPiece = board[i, j].GetNextPiece();
+                    if (tempPiece == null)
+                        continue;
+                }
+                if (tempPiece.PieceType != E_PieceType.PlayerPiece)
+                {
+                    legalMoves++;
+                }
+            }
+        }
+
+        return legalMoves;
     }
 
     public bool ScanPiecesInRangeOfPlayer(Player player)
@@ -274,7 +459,16 @@ public class Board
 
                 var tempPiece = board[i, j].GetTopPiece();
 
-                if (tempPiece != null && tempPiece.PieceType != E_PieceType.PlayerPiece)
+                if (tempPiece == null)
+                    continue;
+
+                if(tempPiece.PieceType == E_PieceType.PlayerPiece)
+                {
+                    tempPiece = board[i, j].GetNextPiece();
+                    if (tempPiece == null)
+                        continue;
+                }
+                if (tempPiece.PieceType != E_PieceType.PlayerPiece)
                 {
                     //Debug.Log($"{i}, {j}");
                     piecesInRangeOfPlayer.Add((i, j));
@@ -286,11 +480,19 @@ public class Board
 
         if (piecesInRangeOfPlayer.Count == 0)
         {
-            Debug.LogWarning("No pieces in range! game over");
+            //Debug.LogWarning("No pieces in range! game over");
             return false;
         }
 
         return true;
+    }
+
+    public List<(int,int)> ReturnPiecesInRangeOfPlayer(Player player)
+    {
+        ScanPiecesInRangeOfPlayer(player);
+
+        var newList = new List<(int, int)>(piecesInRangeOfPlayer);
+        return newList;
     }
 
 
@@ -311,7 +513,15 @@ public class Board
         return false;
     }
 
+    public int GetAmountOfPiecesInSlot((int, int) slot)
+    {
+        return board[slot.Item1, slot.Item2].CurrentListIndex;
+    }
 
+    public int GetAmountOfPillowsInSlot((int,int) slot)
+    {
+        return board[slot.Item1, slot.Item2].CurrentPillowsInSlot;
+    }
 
 
     #region Debugging
@@ -325,10 +535,14 @@ public class Board
 
     public void PrintAllPieces()
     {
-        foreach(BoardSlot slot in board)
+        for(int i = 0; i <= 3; i++)
         {
-            Debug.Log($"slot: {slot}");
-            slot.PrintPiecesInSlot();
+            for(int j =0; j <= 5; j++)
+            {
+
+                Debug.Log($"slot: {i}, {j}");
+                board[i,j].PrintPiecesInSlot();
+            }
         }
     }
 
@@ -347,6 +561,48 @@ public class Board
     }
 
 
+    public void PrintSlotsThatContainPlayers()
+    {
+        foreach(BoardSlot slot in board)
+        {
+            Debug.Log($"slot {slot} = {slot.SlotContainsPlayer}");
+        }
+    }
+
     #endregion
+
+
+
+    public object Clone()
+    {
+        Board newBoard = new Board();
+        var newBoardSlots = newBoard.GetBoard();
+
+
+
+        for(int i=0; i<newBoardSlots.GetLength(0); i++)
+        {
+            for(int j=0; j<newBoardSlots.GetLength(1); j++)
+            {
+                if (board[i, j].SlotIsEmpty())
+                {
+                    continue;
+                }
+
+                var piecesToClone = board[i, j].GetPieces();
+                
+                foreach (var piece in piecesToClone)
+                {
+                    if (piece == null)
+                        continue;
+
+                    var tempPiece = piece.Clone();
+
+                    newBoardSlots[i, j].AddPiece(tempPiece);
+                }
+            }
+        }
+        return newBoard;
+    }
 
 }
