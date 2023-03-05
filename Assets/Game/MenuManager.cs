@@ -88,7 +88,8 @@ public class MenuManager : MonoBehaviour
         }
         if (aIPlayStyle.value == 2)
         {
-            GlobalData.aiPlaystyle = 2;
+            GlobalData.aiPlaystyle = 0;
+            GlobalData.randomFactor = 1;
         }
     }
 
@@ -101,5 +102,10 @@ public class MenuManager : MonoBehaviour
     public void StartPvPGame()
     {
         SceneManager.LoadScene("Game");
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 }

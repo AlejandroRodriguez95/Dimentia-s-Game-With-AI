@@ -145,8 +145,6 @@ public class Controller : MonoBehaviour
         moveListIndex = 0;
     }
 
-
-
     // Interaction with the view (player controller functions)
     #region InputFunctions
 
@@ -220,7 +218,12 @@ public class Controller : MonoBehaviour
 
         switch (turnStage)
         {
+            case E_TurnStages.TurnStart:
+                DisplaySelectPlayerIndicator(currentPlayer);
+                break;
+
             case E_TurnStages.MovePlayer:
+                HideSelectPlayerIndicator();
                 HideAllowedMoveIndicators();
                 DisplayAllowedMoveIndicators(currentPlayer, 1);
                 break;
@@ -233,7 +236,6 @@ public class Controller : MonoBehaviour
                 DisplayAllowedMoveIndicators(currentPlayer, 2);
                 break;
             default:
-                HideAllowedSelectionIndicators();
                 HideAllowedSelectionIndicators();
                 break;
         }
@@ -250,6 +252,7 @@ public class Controller : MonoBehaviour
             case E_TurnStages.MovePlayer: // Select player phase
                 //movePlayerOrPiece = true;
 
+
                 if (p1Plays)
                 {
                     selectedPiece = p1;
@@ -257,6 +260,7 @@ public class Controller : MonoBehaviour
                 else
                 {
                     selectedPiece = p2;
+
                 }
                 break;
 
@@ -266,7 +270,6 @@ public class Controller : MonoBehaviour
                 {
                     boardViewIndex = IndexOfMoveInViewList(pvAIReference.AIMove);
                 }
-
 
                 PlayerMovedToTeleport(ref boardViewIndex); // check if player stepped on teleport
 
@@ -298,7 +301,9 @@ public class Controller : MonoBehaviour
                     sortingIndex = board.GetAmountOfPiecesInSlot(pvAIReference.AIMove);
                 }
 
-                if(selectedPiece.tag == "Pillow")
+
+
+                if (selectedPiece.tag == "Pillow")
                 {
                     (int, int) slotToCheck = selectorPosition;
                     if (!p1Plays && E_gamemode == E_Gamemode.PvAI)
@@ -306,11 +311,11 @@ public class Controller : MonoBehaviour
 
                     amountOfPillowsInSlot = board.GetAmountOfPillowsInSlot(slotToCheck);
                     if (amountOfPillowsInSlot == 1)
-                        pillowOffset = new Vector3(0.3f, 0.3f);
+                        pillowOffset = new Vector3(0.25f, 0.25f);
                     if (amountOfPillowsInSlot == 2)
-                        pillowOffset = new Vector3(-0.3f, 0.3f);
+                        pillowOffset = new Vector3(-0.25f, 0.25f);
                     if (amountOfPillowsInSlot == 3)
-                        pillowOffset = new Vector3(0, -0.3f);
+                        pillowOffset = new Vector3(0, -0.2f);
                 }
 
                 selectedPiece.transform.position = boardView[boardViewIndex].transform.position - pillowOffset;
@@ -324,6 +329,7 @@ public class Controller : MonoBehaviour
                 if (p1Plays)
                 {
                     p1Plays = false;
+
                     turnIndicatorP1.SetActive(false);
                     turnIndicatorP2.SetActive(true);
                     selector.transform.position = p2.transform.position;
@@ -338,6 +344,7 @@ public class Controller : MonoBehaviour
                 else
                 {
                     p1Plays = true;
+
                     selector.transform.position = p1.transform.position;
                     selectorPosition = boardP1.PlayerPosOnBoard;
                     selectorPositionInArray = IndexOfMoveInViewList(selectorPosition);
@@ -398,6 +405,9 @@ public class Controller : MonoBehaviour
 
     private void AddToMoveList(int index)
     {
+        if (index >= TurnSystem.allMoves.Count)
+            return;
+
         var temp = TurnSystem.allMoves[index];
         moveList.text += $"P{temp.playerNumber} from {temp.playerFrom} to {temp.playerTo}, {temp.selectedPieceType} from {temp.selectedPieceFrom} to {temp.selectedPieceTo} \n";
         moveList.rectTransform.sizeDelta += new Vector2(0, 15f);
@@ -405,6 +415,21 @@ public class Controller : MonoBehaviour
         moveListIndex++;
     }
 
+    private void DisplaySelectPlayerIndicator(Player player)
+    {
+        allowedSelectionIndicators[IndexOfMoveInViewList(player.PlayerPosOnBoard)].SetActive(true);
+    }
+
+    private void HideSelectPlayerIndicator()
+    {
+        if (allowedMoveIndicators.Count > 0)
+        {
+            foreach (var indicator in allowedSelectionIndicators)
+            {
+                indicator.SetActive(false);
+            }
+        }
+    }
 
     private void DisplayAllowedMoveIndicators(Player player, int radius)
     {
@@ -448,31 +473,31 @@ public class Controller : MonoBehaviour
         }
     }
 
-    // Debugging:
+    //// Debugging:
 
-    public void Debug1(InputAction.CallbackContext cbc)
-    {
-        if (!cbc.started)
-            return;
+    //public void Debug1(InputAction.CallbackContext cbc)
+    //{
+    //    if (!cbc.started)
+    //        return;
 
-        board.PrintAllPieces();
-    }    
-    public void Debug2(InputAction.CallbackContext cbc)
-    {
-        if (!cbc.started)
-            return;
+    //    board.PrintAllPieces();
+    //}    
+    //public void Debug2(InputAction.CallbackContext cbc)
+    //{
+    //    if (!cbc.started)
+    //        return;
 
-        board.PrintSlotsThatContainPlayers();
+    //    board.PrintSlotsThatContainPlayers();
 
-    }
-    public void Debug3(InputAction.CallbackContext cbc)
-    {
-        if (!cbc.started)
-            return;
+    //}
+    //public void Debug3(InputAction.CallbackContext cbc)
+    //{
+    //    if (!cbc.started)
+    //        return;
 
-        var newAi = aI as Smart;
-        newAi.IterateThroughAllPossibleMoves();
-        //newAi.MovePlayerOnTestBoard((2, 5));
-    }
+    //    var newAi = aI as Smart;
+    //    newAi.IterateThroughAllPossibleMoves();
+    //    //newAi.MovePlayerOnTestBoard((2, 5));
+    //}
 
 }

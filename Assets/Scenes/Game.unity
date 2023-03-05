@@ -412,7 +412,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 4.120467}
+  m_AnchoredPosition: {x: 0, y: 0.000037767266}
   m_SizeDelta: {x: 0, y: 200}
   m_Pivot: {x: 0, y: 1}
 --- !u!23 &393774994
@@ -1449,8 +1449,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 165, y: -76}
-  m_SizeDelta: {x: 400, y: 250}
+  m_AnchoredPosition: {x: 179.20778, y: -82.995544}
+  m_SizeDelta: {x: 428.4155, y: 263.9911}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &595171399
 MonoBehaviour:
@@ -2355,7 +2355,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2095327518}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.9428406
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2446,7 +2446,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
@@ -4690,7 +4690,7 @@ MonoBehaviour:
   gameOverPanel: {fileID: 664800492}
   allowedSelectionIndicator: {fileID: 484815029468122322, guid: 0680dd9fe1aae594a99af6db23230fea, type: 3}
   E_defaultAIBehavior: 1
-  aIDelayBetweenMoves: 2
+  aIDelayBetweenMoves: 1
   Tower: {fileID: 7278125421021793778, guid: 9d6ef3c795a5a724190200aa2fe9bbd9, type: 3}
   Pillow: {fileID: 4236585372566433786, guid: 4d0291cb425a2bb44a6ec37a240db393, type: 3}
   Player1Piece: {fileID: 6260312215553830507, guid: c756ced319d6fc144b306f87d30920e3, type: 3}

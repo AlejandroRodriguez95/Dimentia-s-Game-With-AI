@@ -13,6 +13,8 @@ public class Smart : AI
     Dictionary<(int,int), int> enemyHotArea;
     Dictionary<(int,int), int> targetHotArea;
 
+    int randomFactor;
+
     private int defaultBehavior; // 0 attack hot area, 1 defend hot area, 2 attack player, 3 defend self from trap
 
     Dictionary<int, string> debuggingPriorityDictionary;
@@ -46,6 +48,7 @@ public class Smart : AI
         amountOfLegalMovesForOpponent = 0;
         playerOriginalPosThisTurn = (3,5);
         possibleMovesThisStage = new List<AIMoves>();
+        randomFactor = GlobalData.randomFactor;
 
         InitializeHotAreaMap();
 
@@ -99,40 +102,49 @@ public class Smart : AI
         int opponentPosInHotArea = enemyHotArea[enemy.PlayerPosOnBoard];
         int selfPosInHotArea = targetHotArea[player.PlayerPosOnBoard];
         int distanceBetweenPlayers = Mathf.Abs(player.PlayerPosOnBoard.Item2 - enemy.PlayerPosOnBoard.Item2) + Mathf.Abs(player.PlayerPosOnBoard.Item1 - enemy.PlayerPosOnBoard.Item1);
-        
+
+        // 0 = attack hot area
+        // 1 = defend hot area
+        // 2 try to trap enemy
+        // 3 avoid trap
 
 
 
         arr[0] = (
-            (opponentPosInHotArea - selfPosInHotArea) * opponentPosInHotArea 
-            - legalMovesForSelfOnTempPosition 
-            + legalMovesForEnemyOnTempPosition/2
-            + towerOutOfTheWay * 2
-            - towerBlockingEnemy / 2
+            (opponentPosInHotArea - selfPosInHotArea) * opponentPosInHotArea
+            - legalMovesForSelfOnTempPosition
+            //+ legalMovesForEnemyOnTempPosition / 2
+            + towerOutOfTheWay
+            + Random.Range(-randomFactor, randomFactor)
+            //+ towerBlockingEnemy / 2
             );
 
         arr[1] = (
             (selfPosInHotArea - opponentPosInHotArea) * selfPosInHotArea
-            - legalMovesForSelfOnTempPosition/2 
+            - distanceBetweenPlayers
             + legalMovesForEnemyOnTempPosition
-            + towerOutOfTheWay / 2
-            - towerBlockingEnemy * 2
+            - towerBlockingEnemy
+            + Random.Range(-randomFactor, randomFactor)
+
+            //- towerOutOfTheWay / 4
             );
 
         arr[2] = (
-            legalMovesForEnemyOnTempPosition
-            + towerBlockingEnemy * 2
-            + playerBlockingEnemy * 2
+            - legalMovesForEnemyOnTempPosition
             - distanceBetweenPlayers
-            ); // must be set yet
+            );
 
         arr[3] = (
-            legalMovesForSelfOnTempPosition
-            + towerOutOfTheWay * 2
+            legalMovesForSelfOnTempPosition * 2
+            + Random.Range(-randomFactor, randomFactor)
+            + towerOutOfTheWay
+            );
 
-            ); // must be set yet
 
-        
+
+
+
+
         //Debug.Log($"Attack hot area: {arr[0]}. Defend hot area: {arr[1]}. Enemy possible moves: {arr[2]}. Own possible moves: {arr[3]}.");
 
         return arr;
@@ -140,14 +152,19 @@ public class Smart : AI
 
     private void ChooseMove()
     {
-        int highestValueSoFar = -1;
-        int highestSumSoFar = -1;
+        int highestValueSoFar = -1000;
+        int highestSumSoFar = -1000;
         AIMoves bestMove = new AIMoves();
 
         foreach (AIMoves move in possibleMovesThisStage)
         {
             int value = move.analysis[priorityThisTurn];
             int sum = move.analysis[0] + move.analysis[1] + move.analysis[2] + move.analysis[3];
+
+            if (priorityThisTurn == 2)
+                sum = move.analysis[2];
+
+            //Debug.Log($"Player moves to: {move.playerMove}, Moved piece at: {move.selectedPiece} to {move.selectedPieceMove}. Sum: {sum}");
 
             if (value > highestValueSoFar)
             {
@@ -162,9 +179,9 @@ public class Smart : AI
             }
         }
 
-        if (highestValueSoFar == -1)
+        if (highestValueSoFar == -1000)
         {
-            int random = Random.Range(0, possibleMovesThisStage.Count);
+            int random = Random.Range(0, possibleMovesThisStage.Count - 1);
             bestMove = possibleMovesThisStage[random];
         }
 
@@ -183,8 +200,8 @@ public class Smart : AI
         }
 
 
-        Debug.Log($"AI hot status: {targetHotArea[player.PlayerPosOnBoard]}, enemy hot status: {enemyHotArea[enemy.PlayerPosOnBoard]}, distance between players: {playersAreWithinReach}");
-        Debug.Log($"Amount of legal moves for AI {amountOfLegalMovesForAI}, amount of legal moves for enemy: {amountOfLegalMovesForOpponent}");
+        //Debug.Log($"AI hot status: {targetHotArea[player.PlayerPosOnBoard]}, enemy hot status: {enemyHotArea[enemy.PlayerPosOnBoard]}, distance between players: {playersAreWithinReach}");
+        //Debug.Log($"Amount of legal moves for AI {amountOfLegalMovesForAI}, amount of legal moves for enemy: {amountOfLegalMovesForOpponent}");
 
         // Opponent is in a hot area with a value lower or equal than 3
         if (enemyHotArea[enemy.PlayerPosOnBoard] <= 2)
@@ -214,14 +231,19 @@ public class Smart : AI
         {
             priorityThisTurn = defaultBehavior;
         }
+
+        if(targetHotArea[player.PlayerPosOnBoard] == 5)
+        {
+            priorityThisTurn = 0;
+        }
     }
 
-    public void MovePlayerOnTestBoard((int,int) moveTo)
+    private void MovePlayerOnTestBoard((int,int) moveTo)
     {
         boardReference.AISelectPlayer(player);
         boardReference.AIMovePlayer(ref player, moveTo);
     }    
-    public void MovePieceOnTestBoard((int,int) moveTo, (int,int) from)
+    private void MovePieceOnTestBoard((int,int) moveTo, (int,int) from)
     {
         var useNextPiece = boardReference.AISelectPiece(from, true);
         if (useNextPiece)
@@ -232,7 +254,7 @@ public class Smart : AI
 
 
 
-    public void IterateThroughAllPossibleMoves()
+    private void IterateThroughAllPossibleMoves()
     {
         List<(int, int)> piecesInRangePosition = new List<(int, int)>();
         List<(int, int)> potentialTargetPositions = new List<(int, int)>();
@@ -268,6 +290,7 @@ public class Smart : AI
                     iteratorK = potentialTargetPositions.Count;
                     int towerIntoHotAreaValue = 0;
                     int towerOutOfTheWayValue = 0;
+                    int towerDefendingOwnHotArea = 0;
 
                     for (int k = 0; k < iteratorK; k++)
                     {
@@ -276,6 +299,7 @@ public class Smart : AI
                             if(boardReference.selectedPiece.PieceType == E_PieceType.Tower)
                             {
                                 towerIntoHotAreaValue = enemyHotArea[potentialTargetPositions[k]] - enemyHotArea[piecesInRangePosition[j]];
+
                                 towerOutOfTheWayValue = targetHotArea[potentialTargetPositions[k]] - targetHotArea[piecesInRangePosition[j]];
                             }
                             

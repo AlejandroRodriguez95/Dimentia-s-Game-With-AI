@@ -414,34 +414,21 @@ public class Board : ICloneable
 
     public int AmountOfLegalMovesForPlayer(Player player)
     {
-        int legalMoves = 0;
-
-        for (int i = player.PlayerPosOnBoard.Item1 - 1; i <= player.PlayerPosOnBoard.Item1 + 1; i++)
+        int amountOfMoves = 0;
+        var slot = player.PlayerPosOnBoard;
+        for (int i = slot.Item1 - 1; i <= slot.Item1 + 1; i++)
         {
-            for (int j = player.PlayerPosOnBoard.Item2 - 1; j <= player.PlayerPosOnBoard.Item2 + 1; j++)
+            for (int j = slot.Item2 - 1; j <= slot.Item2 + 1; j++)
             {
                 if (i < 0 || j < 0 || i > 3 || j > 5) // array size is [3, 5]
                     continue;
 
-                var tempPiece = board[i, j].GetTopPiece();
-
-                if (tempPiece == null)
-                    continue;
-
-                if (tempPiece.PieceType == E_PieceType.PlayerPiece)
-                {
-                    tempPiece = board[i, j].GetNextPiece();
-                    if (tempPiece == null)
-                        continue;
-                }
-                if (tempPiece.PieceType != E_PieceType.PlayerPiece)
-                {
-                    legalMoves++;
-                }
+                if (board[i, j].CheckPieceFitsSlot(playerPiece) && (i, j) != player.PlayerPosOnBoard)
+                    amountOfMoves++;
             }
         }
 
-        return legalMoves;
+        return amountOfMoves;
     }
 
     public bool ScanPiecesInRangeOfPlayer(Player player)

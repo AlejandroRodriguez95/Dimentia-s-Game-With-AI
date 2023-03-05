@@ -177,6 +177,14 @@ public class TurnSystem
     }
     private void GameOver()
     {
-        int dummy = 99;
+        SuccessfulMove newMove = new();
+        newMove.playerFrom = tempPlayerFrom;
+        newMove.playerTo = tempPlayerTo;
+        newMove.playerNumber = tempPlayerNumber;
+        newMove.selectedPieceType = tempPieceType;
+        newMove.selectedPieceFrom = tempPieceFrom;
+        newMove.selectedPieceTo = tempPieceTo;
+
+        allMoves.Add(newMove);
     }
 }

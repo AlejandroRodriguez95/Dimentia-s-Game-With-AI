@@ -64,7 +64,6 @@ public class GameManager : MonoBehaviour
         defaultBehavior = GlobalData.aiPlaystyle;
 
         
-        
         p1UIName.text = p1Name;
         p2UIName.text = p2Name;
 
@@ -157,11 +156,11 @@ public class GameManager : MonoBehaviour
                             Vector3 pillowOffset = Vector3.zero;
 
                             if (amountOfPillowsInSlot == 1)
-                                pillowOffset = new Vector3(0.3f, 0.3f);
+                                pillowOffset = new Vector3(0.25f, 0.25f);
                             if (amountOfPillowsInSlot == 2)
-                                pillowOffset = new Vector3(-0.3f, 0.3f);
+                                pillowOffset = new Vector3(-0.25f, 0.25f);
                             if (amountOfPillowsInSlot == 3)
-                                pillowOffset = new Vector3(0, -0.3f);
+                                pillowOffset = new Vector3(0, -0.2f);
 
                             piecesReferenceForController[addOnIndex].Push(Instantiate(Pillow, boardView[boardViewIndex].transform.position - pillowOffset, Quaternion.identity, piecesContainer.transform));
                             piecesReferenceForController[addOnIndex].Peek().GetComponent<SpriteRenderer>().sortingOrder = piecesReferenceForController[addOnIndex].Count;
